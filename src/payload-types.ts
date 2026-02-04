@@ -78,16 +78,11 @@ export interface Config {
     search: Search;
     'payload-kv': PayloadKv;
     'payload-jobs': PayloadJob;
-    'payload-folders': FolderInterface;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
-  collectionsJoins: {
-    'payload-folders': {
-      documentsAndFolders: 'payload-folders' | 'media';
-    };
-  };
+  collectionsJoins: {};
   collectionsSelect: {
     pages: PagesSelect<false> | PagesSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
@@ -100,7 +95,6 @@ export interface Config {
     search: SearchSelect<false> | SearchSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
-    'payload-folders': PayloadFoldersSelect<false> | PayloadFoldersSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -176,9 +170,8 @@ export interface Page {
     } | null;
     links?:
       | {
-          link: {
+          link?: {
             type?: ('reference' | 'custom') | null;
-            newTab?: boolean | null;
             reference?:
               | ({
                   relationTo: 'pages';
@@ -189,7 +182,7 @@ export interface Page {
                   value: string | Post;
                 } | null);
             url?: string | null;
-            label: string;
+            label?: string | null;
             /**
              * Choose how the link should be rendered.
              */
@@ -200,7 +193,7 @@ export interface Page {
       | null;
     media?: (string | null) | Media;
   };
-  layout: (CallToActionBlock | ContentBlock | MediaBlock | ArchiveBlock | FormBlock)[];
+  layout: (CallToActionBlock | ContentBlock | MediaBlock | ArchiveBlock | FormBlock | DeveloperPortfolioBlock)[];
   meta?: {
     title?: string | null;
     /**
@@ -210,11 +203,8 @@ export interface Page {
     description?: string | null;
   };
   publishedAt?: string | null;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
   slug: string;
+  slugLock?: boolean | null;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -260,11 +250,8 @@ export interface Post {
         name?: string | null;
       }[]
     | null;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
   slug: string;
+  slugLock?: boolean | null;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -275,6 +262,13 @@ export interface Post {
  */
 export interface Media {
   id: string;
+  /**
+   * A user-friendly name for the media item
+   */
+  name?: string | null;
+  /**
+   * Alternative text for the media item, used for accessibility and SEO
+   */
   alt?: string | null;
   caption?: {
     root: {
@@ -291,11 +285,14 @@ export interface Media {
     };
     [k: string]: unknown;
   } | null;
-  folder?: (string | null) | FolderInterface;
+  blurDataURL?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
   thumbnailURL?: string | null;
+  /**
+   * Original filename
+   */
   filename?: string | null;
   mimeType?: string | null;
   filesize?: number | null;
@@ -364,42 +361,13 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "payload-folders".
- */
-export interface FolderInterface {
-  id: string;
-  name: string;
-  folder?: (string | null) | FolderInterface;
-  documentsAndFolders?: {
-    docs?: (
-      | {
-          relationTo?: 'payload-folders';
-          value: string | FolderInterface;
-        }
-      | {
-          relationTo?: 'media';
-          value: string | Media;
-        }
-    )[];
-    hasNextPage?: boolean;
-    totalDocs?: number;
-  };
-  folderType?: 'media'[] | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "categories".
  */
 export interface Category {
   id: string;
   title: string;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
   slug: string;
+  slugLock?: boolean | null;
   parent?: (string | null) | Category;
   breadcrumbs?:
     | {
@@ -459,9 +427,8 @@ export interface CallToActionBlock {
   } | null;
   links?:
     | {
-        link: {
+        link?: {
           type?: ('reference' | 'custom') | null;
-          newTab?: boolean | null;
           reference?:
             | ({
                 relationTo: 'pages';
@@ -472,7 +439,7 @@ export interface CallToActionBlock {
                 value: string | Post;
               } | null);
           url?: string | null;
-          label: string;
+          label?: string | null;
           /**
            * Choose how the link should be rendered.
            */
@@ -511,7 +478,6 @@ export interface ContentBlock {
         enableLink?: boolean | null;
         link?: {
           type?: ('reference' | 'custom') | null;
-          newTab?: boolean | null;
           reference?:
             | ({
                 relationTo: 'pages';
@@ -522,7 +488,7 @@ export interface ContentBlock {
                 value: string | Post;
               } | null);
           url?: string | null;
-          label: string;
+          label?: string | null;
           /**
            * Choose how the link should be rendered.
            */
@@ -781,6 +747,36 @@ export interface Form {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "DeveloperPortfolioBlock".
+ */
+export interface DeveloperPortfolioBlock {
+  name: string;
+  title: string;
+  description: string;
+  skills?:
+    | {
+        skill: string;
+        level?: ('beginner' | 'intermediate' | 'advanced' | 'expert') | null;
+        id?: string | null;
+      }[]
+    | null;
+  profileImage?: (string | null) | Media;
+  backgroundImage?: (string | null) | Media;
+  socialLinks?:
+    | {
+        platform: 'github' | 'linkedin' | 'twitter' | 'portfolio' | 'email';
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  animationStyle?: ('fadeIn' | 'slideUp' | 'typewriter' | 'glitch') | null;
+  showParticles?: boolean | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'developerPortfolio';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -1004,10 +1000,6 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'search';
         value: string | Search;
-      } | null)
-    | ({
-        relationTo: 'payload-folders';
-        value: string | FolderInterface;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -1069,7 +1061,6 @@ export interface PagesSelect<T extends boolean = true> {
                 | T
                 | {
                     type?: T;
-                    newTab?: T;
                     reference?: T;
                     url?: T;
                     label?: T;
@@ -1087,6 +1078,7 @@ export interface PagesSelect<T extends boolean = true> {
         mediaBlock?: T | MediaBlockSelect<T>;
         archive?: T | ArchiveBlockSelect<T>;
         formBlock?: T | FormBlockSelect<T>;
+        developerPortfolio?: T | DeveloperPortfolioBlockSelect<T>;
       };
   meta?:
     | T
@@ -1096,8 +1088,8 @@ export interface PagesSelect<T extends boolean = true> {
         description?: T;
       };
   publishedAt?: T;
-  generateSlug?: T;
   slug?: T;
+  slugLock?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
@@ -1115,7 +1107,6 @@ export interface CallToActionBlockSelect<T extends boolean = true> {
           | T
           | {
               type?: T;
-              newTab?: T;
               reference?: T;
               url?: T;
               label?: T;
@@ -1141,7 +1132,6 @@ export interface ContentBlockSelect<T extends boolean = true> {
           | T
           | {
               type?: T;
-              newTab?: T;
               reference?: T;
               url?: T;
               label?: T;
@@ -1188,6 +1178,35 @@ export interface FormBlockSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "DeveloperPortfolioBlock_select".
+ */
+export interface DeveloperPortfolioBlockSelect<T extends boolean = true> {
+  name?: T;
+  title?: T;
+  description?: T;
+  skills?:
+    | T
+    | {
+        skill?: T;
+        level?: T;
+        id?: T;
+      };
+  profileImage?: T;
+  backgroundImage?: T;
+  socialLinks?:
+    | T
+    | {
+        platform?: T;
+        url?: T;
+        id?: T;
+      };
+  animationStyle?: T;
+  showParticles?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "posts_select".
  */
 export interface PostsSelect<T extends boolean = true> {
@@ -1211,8 +1230,8 @@ export interface PostsSelect<T extends boolean = true> {
         id?: T;
         name?: T;
       };
-  generateSlug?: T;
   slug?: T;
+  slugLock?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
@@ -1222,9 +1241,10 @@ export interface PostsSelect<T extends boolean = true> {
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
+  name?: T;
   alt?: T;
   caption?: T;
-  folder?: T;
+  blurDataURL?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -1317,8 +1337,8 @@ export interface MediaSelect<T extends boolean = true> {
  */
 export interface CategoriesSelect<T extends boolean = true> {
   title?: T;
-  generateSlug?: T;
   slug?: T;
+  slugLock?: T;
   parent?: T;
   breadcrumbs?:
     | T
@@ -1587,18 +1607,6 @@ export interface PayloadJobsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "payload-folders_select".
- */
-export interface PayloadFoldersSelect<T extends boolean = true> {
-  name?: T;
-  folder?: T;
-  documentsAndFolders?: T;
-  folderType?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents_select".
  */
 export interface PayloadLockedDocumentsSelect<T extends boolean = true> {
@@ -1635,11 +1643,28 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  */
 export interface Header {
   id: string;
-  navItems?:
+  logo?: (string | null) | Media;
+  /**
+   * Choisissez vers quelle page ou URL le logo doit rediriger. Par défaut: page d'accueil.
+   */
+  logoLink?: {
+    type?: ('reference' | 'custom') | null;
+    reference?:
+      | ({
+          relationTo: 'pages';
+          value: string | Page;
+        } | null)
+      | ({
+          relationTo: 'posts';
+          value: string | Post;
+        } | null);
+    url?: string | null;
+  };
+  menus?:
     | {
-        link: {
-          type?: ('reference' | 'custom') | null;
-          newTab?: boolean | null;
+        menu: {
+          title: string;
+          linkType?: ('none' | 'reference' | 'custom') | null;
           reference?:
             | ({
                 relationTo: 'pages';
@@ -1649,12 +1674,82 @@ export interface Header {
                 relationTo: 'posts';
                 value: string | Post;
               } | null);
-          url?: string | null;
-          label: string;
+          href?: string | null;
+          items?:
+            | {
+                label: string;
+                /**
+                 * Upload an icon for this menu item (SVG recommended)
+                 */
+                icon?: (string | null) | Media;
+                type?: ('link' | 'button') | null;
+                linkType?: ('reference' | 'custom') | null;
+                reference?:
+                  | ({
+                      relationTo: 'pages';
+                      value: string | Page;
+                    } | null)
+                  | ({
+                      relationTo: 'posts';
+                      value: string | Post;
+                    } | null);
+                href?: string | null;
+                id?: string | null;
+              }[]
+            | null;
+          actionLink?: {
+            label?: string | null;
+            linkType?: ('reference' | 'custom') | null;
+            reference?:
+              | ({
+                  relationTo: 'pages';
+                  value: string | Page;
+                } | null)
+              | ({
+                  relationTo: 'posts';
+                  value: string | Post;
+                } | null);
+            href?: string | null;
+          };
         };
         id?: string | null;
       }[]
     | null;
+  ctaButton?: {
+    label?: string | null;
+    buttonLink?: {
+      type?: ('reference' | 'custom') | null;
+      reference?:
+        | ({
+            relationTo: 'pages';
+            value: string | Page;
+          } | null)
+        | ({
+            relationTo: 'posts';
+            value: string | Post;
+          } | null);
+      url?: string | null;
+    };
+  };
+  /**
+   * Ce bouton apparaît uniquement dans le menu mobile, en bas de la navigation.
+   */
+  consultantButton?: {
+    label?: string | null;
+    linkType?: ('reference' | 'custom') | null;
+    reference?:
+      | ({
+          relationTo: 'pages';
+          value: string | Page;
+        } | null)
+      | ({
+          relationTo: 'posts';
+          value: string | Post;
+        } | null);
+    href?: string | null;
+  };
+  createdBy?: (string | null) | User;
+  updatedBy?: (string | null) | User;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1666,9 +1761,8 @@ export interface Footer {
   id: string;
   navItems?:
     | {
-        link: {
+        link?: {
           type?: ('reference' | 'custom') | null;
-          newTab?: boolean | null;
           reference?:
             | ({
                 relationTo: 'pages';
@@ -1679,7 +1773,7 @@ export interface Footer {
                 value: string | Post;
               } | null);
           url?: string | null;
-          label: string;
+          label?: string | null;
         };
         id?: string | null;
       }[]
@@ -1692,20 +1786,68 @@ export interface Footer {
  * via the `definition` "header_select".
  */
 export interface HeaderSelect<T extends boolean = true> {
-  navItems?:
+  logo?: T;
+  logoLink?:
     | T
     | {
-        link?:
+        type?: T;
+        reference?: T;
+        url?: T;
+      };
+  menus?:
+    | T
+    | {
+        menu?:
           | T
           | {
-              type?: T;
-              newTab?: T;
+              title?: T;
+              linkType?: T;
               reference?: T;
-              url?: T;
-              label?: T;
+              href?: T;
+              items?:
+                | T
+                | {
+                    label?: T;
+                    icon?: T;
+                    type?: T;
+                    linkType?: T;
+                    reference?: T;
+                    href?: T;
+                    id?: T;
+                  };
+              actionLink?:
+                | T
+                | {
+                    label?: T;
+                    linkType?: T;
+                    reference?: T;
+                    href?: T;
+                  };
             };
         id?: T;
       };
+  ctaButton?:
+    | T
+    | {
+        label?: T;
+        buttonLink?:
+          | T
+          | {
+              type?: T;
+              reference?: T;
+              url?: T;
+            };
+      };
+  consultantButton?:
+    | T
+    | {
+        label?: T;
+        linkType?: T;
+        reference?: T;
+        href?: T;
+      };
+  createdBy?: T;
+  updatedBy?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
@@ -1722,7 +1864,6 @@ export interface FooterSelect<T extends boolean = true> {
           | T
           | {
               type?: T;
-              newTab?: T;
               reference?: T;
               url?: T;
               label?: T;
