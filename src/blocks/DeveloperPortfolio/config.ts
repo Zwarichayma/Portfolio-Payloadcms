@@ -13,39 +13,12 @@ export const DeveloperPortfolio: Block = {
     {
       name: 'title',
       type: 'text',
-      required: true,
       label: 'Job Title',
     },
     {
       name: 'description',
       type: 'textarea',
-      required: true,
       label: 'Description',
-    },
-    {
-      name: 'skills',
-      type: 'array',
-      label: 'Skills',
-      fields: [
-        {
-          name: 'skill',
-          type: 'text',
-          required: true,
-        },
-        {
-          name: 'level',
-          type: 'select',
-          options: [
-            { label: 'Beginner', value: 'beginner' },
-            { label: 'Intermediate', value: 'intermediate' },
-            { label: 'Advanced', value: 'advanced' },
-            { label: 'Expert', value: 'expert' },
-          ],
-          defaultValue: 'intermediate',
-        },
-      ],
-      minRows: 1,
-      maxRows: 10,
     },
     {
       name: 'profileImage',
@@ -74,7 +47,6 @@ export const DeveloperPortfolio: Block = {
             { label: 'Portfolio', value: 'portfolio' },
             { label: 'Email', value: 'email' },
           ],
-          required: true,
         },
         {
           name: 'url',

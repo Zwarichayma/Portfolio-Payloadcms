@@ -1,6 +1,7 @@
 'use server'
 import { CustomButton } from '@/components/custom/CustomButton'
 import { CustomLink } from '@/components/custom/CustomLink'
+import { ThemeToggle } from '@/components/ui/ThemeToggle'
 import type { Page } from '@/payload-types'
 import { Link } from '@/types/link'
 import Image from 'next/image'
@@ -8,6 +9,7 @@ import React from 'react'
 import { DesktopNav } from '../../Header/DesktopNav'
 import { MobileMenuButton } from '../../Header/MobileMenuButton'
 import { getGlobalHeader } from './getGlobalHeader'
+import { HeaderWrapper } from './HeaderWrapper'
 
 // Extract HeaderBlock type from Page layout
 type LayoutBlock = NonNullable<Page['layout']>[number]
@@ -67,7 +69,7 @@ export const HeaderBlock: React.FC<HeaderBlockProps> = async (props) => {
   return (
     <>
       <section id={anchorId || undefined}>
-        <div className="fixed top-0 left-0 z-50 bg-white shadow-[0px_1px_0px_0px_#BFC6CC80] lg:h-[83px] w-full lg:w-[calc(100%-var(--sidebar-width,0px))]">
+        <HeaderWrapper>
           <header className="container lg:[--has-sidebar:1] lg:w-full lg:px-24 md:px-40 py-16 flex items-center justify-between h-full">
             {/* Logo et Navigation */}
             <div className="flex items-center gap-32 min-w-0">
@@ -120,6 +122,9 @@ export const HeaderBlock: React.FC<HeaderBlockProps> = async (props) => {
 
             {/* Actions Desktop & Mobile */}
             <div className="flex items-center gap-4 ml-auto lg:ml-0">
+              {/* Theme Toggle Button */}
+              <ThemeToggle className="flex-shrink-0" />
+
               {/* CTA Button Desktop - Server Component */}
               {hasValidCtaButton && (
                 <div className="hidden lg:block">
@@ -149,10 +154,11 @@ export const HeaderBlock: React.FC<HeaderBlockProps> = async (props) => {
               </div>
             </div>
           </header>
-        </div>
+        </HeaderWrapper>
 
         {/* Spacer for fixed header */}
         <div className="h-[72px]" />
+       
       </section>
     </>
   )

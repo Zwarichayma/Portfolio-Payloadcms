@@ -1,8 +1,8 @@
 'use client'
-import { cn } from '@/lib/utils'
 import Image from 'next/image'
 import * as React from 'react'
 import { OutlineButtonProps } from './types'
+import { cn } from '@/utilities/ui'
 
 const OutlineButton = React.forwardRef<HTMLButtonElement, OutlineButtonProps>(
   (

@@ -124,5 +124,16 @@ export const link: LinkType = ({ appearances, disableLabel = false, overrides = 
     })
   }
 
+  // Always add newTab field for external link support
+  linkResult.fields.push({
+    name: 'newTab',
+    type: 'checkbox',
+    label: 'Open in new tab',
+    defaultValue: false,
+    admin: {
+      description: 'Check to open link in a new tab/window',
+    },
+  })
+
   return deepMerge(linkResult, overrides)
 }

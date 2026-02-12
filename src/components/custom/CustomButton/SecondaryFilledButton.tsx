@@ -1,8 +1,8 @@
 'use client'
 import CustomText from '@/components/custom/custom-text'
-import { cn } from '@/lib/utils'
 import * as React from 'react'
 import { SecondaryFilledButtonProps } from './types'
+import { cn } from '@/utilities/ui'
 
 const SecondaryFilledButton = React.forwardRef<HTMLButtonElement, SecondaryFilledButtonProps>(
   (

@@ -1,5 +1,6 @@
 import { easeInOut, motion } from 'motion/react'
 import * as React from 'react'
+import { useTheme } from '@/providers/Theme'
 
 const PrimaryButton = React.forwardRef<
   HTMLButtonElement,
@@ -29,6 +30,7 @@ const PrimaryButton = React.forwardRef<
     const [isHovering, setIsHovering] = React.useState(false)
     const [isLeaving, setIsLeaving] = React.useState(false)
     const [isDesktop, setIsDesktop] = React.useState(false)
+    const { theme } = useTheme()
 
     // Detect if device is desktop (has hover capability)
     React.useEffect(() => {
@@ -133,6 +135,28 @@ const PrimaryButton = React.forwardRef<
       setIsLeaving(false)
     }
 
+    // Get theme-aware colors
+    const getButtonColors = () => {
+      if (theme === 'dark') {
+        return {
+          normal: '#4F46E5', // indigo-600
+          hover: '#4338CA',   // indigo-700
+          shine: '#A5B4FC',   // indigo-300
+          text: '#FFFFFF',
+          shadow: '0px 90px 36px rgba(79, 70, 229, 0.01), 0px 51px 30px rgba(79, 70, 229, 0.05), 0px 23px 23px rgba(79, 70, 229, 0.09), 0px 6px 12px rgba(79, 70, 229, 0.1)'
+        }
+      }
+      return {
+        normal: '#397DFF',   // blue default
+        hover: '#2D6DE6',    // blue hover
+        shine: '#ABC8FF',    // blue shine
+        text: '#FFFFFF',
+        shadow: '0px 90px 36px rgba(57, 125, 255, 0.01), 0px 51px 30px rgba(57, 125, 255, 0.05), 0px 23px 23px rgba(57, 125, 255, 0.09), 0px 6px 12px rgba(57, 125, 255, 0.1)'
+      }
+    }
+
+    const buttonColors = getButtonColors()
+
     return (
       <motion.button
         ref={ref}
@@ -146,10 +170,11 @@ const PrimaryButton = React.forwardRef<
           ease: easeInOut,
         }}
         style={{
-          backgroundColor: isDesktop && (isHovering || isLeaving) ? '#2D6DE6' : '#397DFF',
+          backgroundColor: isDesktop && (isHovering || isLeaving) ? buttonColors.hover : buttonColors.normal,
+          color: buttonColors.text,
           boxShadow:
             isDesktop && (isHovering || isLeaving)
-              ? '0px 90px 36px rgba(57, 125, 255, 0.01), 0px 51px 30px rgba(57, 125, 255, 0.05), 0px 23px 23px rgba(57, 125, 255, 0.09), 0px 6px 12px rgba(57, 125, 255, 0.1)'
+              ? buttonColors.shadow
               : 'none',
         }}
         onMouseEnter={handleMouseEnter}
@@ -164,7 +189,7 @@ const PrimaryButton = React.forwardRef<
             style={{
               transform: 'translateY(-50%) rotate(19.03deg)',
               zIndex: 2,
-              background: '#ABC8FF',
+              background: buttonColors.shine,
               filter: 'blur(7.5px)',
               borderRadius: '0px',
             }}
@@ -180,7 +205,7 @@ const PrimaryButton = React.forwardRef<
             style={{
               transform: 'translateY(-50%) rotate(19.03deg)',
               zIndex: 2,
-              background: '#ABC8FF',
+              background: buttonColors.shine,
               filter: 'blur(7.5px)',
               borderRadius: '0px',
             }}

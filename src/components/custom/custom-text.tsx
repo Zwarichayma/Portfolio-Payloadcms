@@ -1,6 +1,6 @@
 'use client'
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/utilities/ui'
 import { cva, type VariantProps } from 'class-variance-authority'
 import type React from 'react'
 import type { JSX } from 'react/jsx-runtime'

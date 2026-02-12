@@ -1,9 +1,9 @@
 'use client'
 
 import * as React from 'react'
-import { cn } from '@/lib/utils'
 import { BaseButtonProps } from './types'
 import Image from 'next/image'
+import { cn } from '@/utilities/ui'
 
 export interface OutlineAnimatedButtonProps extends BaseButtonProps {
   showArrow?: boolean

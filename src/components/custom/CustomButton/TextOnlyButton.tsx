@@ -1,9 +1,9 @@
 'use client'
 
-import { cn } from '@/lib/utils'
 import Image from 'next/image'
 import * as React from 'react'
 import { BaseButtonProps } from './types'
+import { cn } from '@/utilities/ui'
 
 export interface TextOnlyButtonProps extends BaseButtonProps {}
 

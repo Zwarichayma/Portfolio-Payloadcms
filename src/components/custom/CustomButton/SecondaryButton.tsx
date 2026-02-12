@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { motion, AnimatePresence, Variants } from 'motion/react'
-import { cn } from '@/lib/utils'
 import { SecondaryButtonProps } from './types'
+import { cn } from '@/utilities/ui'
 
 const SecondaryButton = React.forwardRef<HTMLButtonElement, SecondaryButtonProps>(
   (

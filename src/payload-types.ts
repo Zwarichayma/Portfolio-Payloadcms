@@ -187,13 +187,25 @@ export interface Page {
              * Choose how the link should be rendered.
              */
             appearance?: ('default' | 'outline') | null;
+            /**
+             * Check to open link in a new tab/window
+             */
+            newTab?: boolean | null;
           };
           id?: string | null;
         }[]
       | null;
     media?: (string | null) | Media;
   };
-  layout: (CallToActionBlock | ContentBlock | MediaBlock | ArchiveBlock | FormBlock | DeveloperPortfolioBlock)[];
+  layout: (
+    | CallToActionBlock
+    | ContentBlock
+    | MediaBlock
+    | ArchiveBlock
+    | FormBlock
+    | DeveloperPortfolioBlock
+    | HeaderBlockProps
+  )[];
   meta?: {
     title?: string | null;
     /**
@@ -444,6 +456,10 @@ export interface CallToActionBlock {
            * Choose how the link should be rendered.
            */
           appearance?: ('default' | 'outline') | null;
+          /**
+           * Check to open link in a new tab/window
+           */
+          newTab?: boolean | null;
         };
         id?: string | null;
       }[]
@@ -493,6 +509,10 @@ export interface ContentBlock {
            * Choose how the link should be rendered.
            */
           appearance?: ('default' | 'outline') | null;
+          /**
+           * Check to open link in a new tab/window
+           */
+          newTab?: boolean | null;
         };
         id?: string | null;
       }[]
@@ -751,20 +771,13 @@ export interface Form {
  */
 export interface DeveloperPortfolioBlock {
   name: string;
-  title: string;
-  description: string;
-  skills?:
-    | {
-        skill: string;
-        level?: ('beginner' | 'intermediate' | 'advanced' | 'expert') | null;
-        id?: string | null;
-      }[]
-    | null;
+  title?: string | null;
+  description?: string | null;
   profileImage?: (string | null) | Media;
   backgroundImage?: (string | null) | Media;
   socialLinks?:
     | {
-        platform: 'github' | 'linkedin' | 'twitter' | 'portfolio' | 'email';
+        platform?: ('github' | 'linkedin' | 'twitter' | 'portfolio' | 'email') | null;
         url: string;
         id?: string | null;
       }[]
@@ -774,6 +787,140 @@ export interface DeveloperPortfolioBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'developerPortfolio';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HeaderBlockProps".
+ */
+export interface HeaderBlockProps {
+  /**
+   * Unique anchor ID for this section
+   */
+  anchorId?: string | null;
+  /**
+   * Coché : Utilise un logo spécifique pour cette page. ☐ Décoché : Utilise le logo du header global par défaut.
+   */
+  overrideLogo?: boolean | null;
+  logo?: (string | null) | Media;
+  /**
+   * Choisissez vers quelle page ou URL ce logo doit rediriger.
+   */
+  logoLink?: {
+    url?: string | null;
+  };
+  /**
+   * Coché : Crée des menus de navigation personnalisés pour cette page. ☐ Décoché : Utilise les menus du header global par défaut.
+   */
+  overrideMenus?: boolean | null;
+  /**
+   * Configurez ici UNIQUEMENT les menus spécifiques à cette page. Ils remplaceront complètement les menus du header global. Vous pouvez créer autant de menus que nécessaire.
+   */
+  customMenus?:
+    | {
+        menu: {
+          title: string;
+          linkType?: ('none' | 'reference' | 'custom') | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: string | Page;
+              } | null)
+            | ({
+                relationTo: 'posts';
+                value: string | Post;
+              } | null);
+          href?: string | null;
+          items?:
+            | {
+                label: string;
+                /**
+                 * Upload an icon for this menu item (SVG recommended)
+                 */
+                icon?: (string | null) | Media;
+                type?: ('link' | 'button') | null;
+                linkType?: ('reference' | 'custom') | null;
+                reference?:
+                  | ({
+                      relationTo: 'pages';
+                      value: string | Page;
+                    } | null)
+                  | ({
+                      relationTo: 'posts';
+                      value: string | Post;
+                    } | null);
+                href?: string | null;
+                id?: string | null;
+              }[]
+            | null;
+          actionLink?: {
+            label?: string | null;
+            linkType?: ('reference' | 'custom') | null;
+            reference?:
+              | ({
+                  relationTo: 'pages';
+                  value: string | Page;
+                } | null)
+              | ({
+                  relationTo: 'posts';
+                  value: string | Post;
+                } | null);
+            href?: string | null;
+          };
+        };
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Coché : Utilise un bouton CTA (Call-to-Action) personnalisé pour cette page. ☐ Décoché : Utilise le bouton du header global par défaut.
+   */
+  overrideCtaButton?: boolean | null;
+  /**
+   * Configurez ici UNIQUEMENT le bouton Call-to-Action spécifique à cette page. Il remplacera complètement le bouton du header global.
+   */
+  ctaButton?: {
+    label?: string | null;
+    buttonLink?: {
+      type?: ('reference' | 'custom') | null;
+      reference?:
+        | ({
+            relationTo: 'pages';
+            value: string | Page;
+          } | null)
+        | ({
+            relationTo: 'posts';
+            value: string | Post;
+          } | null);
+      url?: string | null;
+      /**
+       * Check to open link in a new tab/window
+       */
+      newTab?: boolean | null;
+    };
+  };
+  /**
+   * Coché : Personnalise le bouton "Trouver mon consultant" du menu mobile. ☐ Décoché : Utilise la configuration du header global.
+   */
+  overrideConsultantButton?: boolean | null;
+  /**
+   * Configurez ici le bouton "Trouver mon consultant" qui apparaît en bas du menu mobile pour cette page.
+   */
+  consultantButton?: {
+    label?: string | null;
+    linkType?: ('reference' | 'custom') | null;
+    reference?:
+      | ({
+          relationTo: 'pages';
+          value: string | Page;
+        } | null)
+      | ({
+          relationTo: 'posts';
+          value: string | Post;
+        } | null);
+    href?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'headerBlock';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1065,6 +1212,7 @@ export interface PagesSelect<T extends boolean = true> {
                     url?: T;
                     label?: T;
                     appearance?: T;
+                    newTab?: T;
                   };
               id?: T;
             };
@@ -1079,6 +1227,7 @@ export interface PagesSelect<T extends boolean = true> {
         archive?: T | ArchiveBlockSelect<T>;
         formBlock?: T | FormBlockSelect<T>;
         developerPortfolio?: T | DeveloperPortfolioBlockSelect<T>;
+        headerBlock?: T | HeaderBlockPropsSelect<T>;
       };
   meta?:
     | T
@@ -1111,6 +1260,7 @@ export interface CallToActionBlockSelect<T extends boolean = true> {
               url?: T;
               label?: T;
               appearance?: T;
+              newTab?: T;
             };
         id?: T;
       };
@@ -1136,6 +1286,7 @@ export interface ContentBlockSelect<T extends boolean = true> {
               url?: T;
               label?: T;
               appearance?: T;
+              newTab?: T;
             };
         id?: T;
       };
@@ -1184,13 +1335,6 @@ export interface DeveloperPortfolioBlockSelect<T extends boolean = true> {
   name?: T;
   title?: T;
   description?: T;
-  skills?:
-    | T
-    | {
-        skill?: T;
-        level?: T;
-        id?: T;
-      };
   profileImage?: T;
   backgroundImage?: T;
   socialLinks?:
@@ -1202,6 +1346,78 @@ export interface DeveloperPortfolioBlockSelect<T extends boolean = true> {
       };
   animationStyle?: T;
   showParticles?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HeaderBlockProps_select".
+ */
+export interface HeaderBlockPropsSelect<T extends boolean = true> {
+  anchorId?: T;
+  overrideLogo?: T;
+  logo?: T;
+  logoLink?:
+    | T
+    | {
+        url?: T;
+      };
+  overrideMenus?: T;
+  customMenus?:
+    | T
+    | {
+        menu?:
+          | T
+          | {
+              title?: T;
+              linkType?: T;
+              reference?: T;
+              href?: T;
+              items?:
+                | T
+                | {
+                    label?: T;
+                    icon?: T;
+                    type?: T;
+                    linkType?: T;
+                    reference?: T;
+                    href?: T;
+                    id?: T;
+                  };
+              actionLink?:
+                | T
+                | {
+                    label?: T;
+                    linkType?: T;
+                    reference?: T;
+                    href?: T;
+                  };
+            };
+        id?: T;
+      };
+  overrideCtaButton?: T;
+  ctaButton?:
+    | T
+    | {
+        label?: T;
+        buttonLink?:
+          | T
+          | {
+              type?: T;
+              reference?: T;
+              url?: T;
+              newTab?: T;
+            };
+      };
+  overrideConsultantButton?: T;
+  consultantButton?:
+    | T
+    | {
+        label?: T;
+        linkType?: T;
+        reference?: T;
+        href?: T;
+      };
   id?: T;
   blockName?: T;
 }
@@ -1659,6 +1875,10 @@ export interface Header {
           value: string | Post;
         } | null);
     url?: string | null;
+    /**
+     * Check to open link in a new tab/window
+     */
+    newTab?: boolean | null;
   };
   menus?:
     | {
@@ -1729,6 +1949,10 @@ export interface Header {
             value: string | Post;
           } | null);
       url?: string | null;
+      /**
+       * Check to open link in a new tab/window
+       */
+      newTab?: boolean | null;
     };
   };
   /**
@@ -1774,6 +1998,10 @@ export interface Footer {
               } | null);
           url?: string | null;
           label?: string | null;
+          /**
+           * Check to open link in a new tab/window
+           */
+          newTab?: boolean | null;
         };
         id?: string | null;
       }[]
@@ -1793,6 +2021,7 @@ export interface HeaderSelect<T extends boolean = true> {
         type?: T;
         reference?: T;
         url?: T;
+        newTab?: T;
       };
   menus?:
     | T
@@ -1836,6 +2065,7 @@ export interface HeaderSelect<T extends boolean = true> {
               type?: T;
               reference?: T;
               url?: T;
+              newTab?: T;
             };
       };
   consultantButton?:
@@ -1867,6 +2097,7 @@ export interface FooterSelect<T extends boolean = true> {
               reference?: T;
               url?: T;
               label?: T;
+              newTab?: T;
             };
         id?: T;
       };
