@@ -37,7 +37,7 @@ export const link: LinkType = ({ appearances, disableLabel = false, overrides = 
             type: 'radio',
             admin: {
               layout: 'horizontal',
-              width: '50%',
+              width: '100%',
             },
             defaultValue: 'reference',
             options: [
@@ -50,17 +50,6 @@ export const link: LinkType = ({ appearances, disableLabel = false, overrides = 
                 value: 'custom',
               },
             ],
-          },
-          {
-            name: 'newTab',
-            type: 'checkbox',
-            admin: {
-              style: {
-                alignSelf: 'flex-end',
-              },
-              width: '50%',
-            },
-            label: 'Open in new tab',
           },
         ],
       },
@@ -76,7 +65,7 @@ export const link: LinkType = ({ appearances, disableLabel = false, overrides = 
       },
       label: 'Document to link to',
       relationTo: ['pages', 'posts'],
-      required: true,
+      required: false,
     },
     {
       name: 'url',
@@ -85,7 +74,7 @@ export const link: LinkType = ({ appearances, disableLabel = false, overrides = 
         condition: (_, siblingData) => siblingData?.type === 'custom',
       },
       label: 'Custom URL',
-      required: true,
+      required: false,
     },
   ]
 
@@ -109,7 +98,7 @@ export const link: LinkType = ({ appearances, disableLabel = false, overrides = 
             width: '50%',
           },
           label: 'Label',
-          required: true,
+          required: false,
         },
       ],
     })
@@ -134,6 +123,17 @@ export const link: LinkType = ({ appearances, disableLabel = false, overrides = 
       options: appearanceOptionsToUse,
     })
   }
+
+  // Always add newTab field for external link support
+  linkResult.fields.push({
+    name: 'newTab',
+    type: 'checkbox',
+    label: 'Open in new tab',
+    defaultValue: false,
+    admin: {
+      description: 'Check to open link in a new tab/window',
+    },
+  })
 
   return deepMerge(linkResult, overrides)
 }
