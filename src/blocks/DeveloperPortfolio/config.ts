@@ -57,6 +57,96 @@ export const DeveloperPortfolio: Block = {
       maxRows: 5,
     },
     {
+      name: 'statusBadge',
+      type: 'text',
+      label: 'Status Badge',
+      admin: {
+        description: 'Badge affiché au-dessus du nom (ex: "Disponible — Open to work")',
+      },
+    },
+    {
+      name: 'location',
+      type: 'text',
+      label: 'Location',
+    },
+    {
+      name: 'codeCard',
+      type: 'group',
+      label: 'Code Card',
+      fields: [
+        {
+          name: 'title',
+          type: 'text',
+          label: 'Fichier',
+          defaultValue: 'profile.ts',
+        },
+        {
+          name: 'variableName',
+          type: 'text',
+          label: 'Nom de la variable',
+          defaultValue: 'developer',
+        },
+        {
+          name: 'lines',
+          type: 'array',
+          label: 'Lignes de code',
+          fields: [
+            {
+              name: 'key',
+              type: 'text',
+              required: true,
+              label: 'Clé',
+            },
+            {
+              name: 'value',
+              type: 'text',
+              required: true,
+              label: 'Valeur',
+            },
+            {
+              name: 'color',
+              type: 'select',
+              label: 'Couleur de la valeur',
+              options: [
+                { label: 'Vert', value: '#34d399' },
+                { label: 'Ambre', value: '#fbbf24' },
+                { label: 'Rose', value: '#f9a8d4' },
+                { label: 'Violet', value: '#a78bfa' },
+                { label: 'Bleu', value: '#60a5fa' },
+              ],
+              defaultValue: '#34d399',
+            },
+          ],
+        },
+        {
+          name: 'footerText',
+          type: 'text',
+          label: 'Texte de pied de carte',
+          defaultValue: 'ready to build',
+        },
+      ],
+    },
+    {
+      name: 'stats',
+      type: 'array',
+      label: 'Statistiques',
+      maxRows: 4,
+      fields: [
+        {
+          name: 'value',
+          type: 'text',
+          required: true,
+          label: 'Valeur',
+        },
+        {
+          name: 'label',
+          type: 'text',
+          required: true,
+          label: 'Libellé',
+        },
+      ],
+    },
+    {
       name: 'animationStyle',
       type: 'select',
       label: 'Animation Style',

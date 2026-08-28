@@ -2,6 +2,7 @@
 
 import React from 'react'
 import { motion } from 'framer-motion'
+import { useTheme } from '@/providers/Theme'
 
 interface SocialIconProps {
   platform: string
@@ -9,6 +10,8 @@ interface SocialIconProps {
 }
 
 export const SocialIcon: React.FC<SocialIconProps> = ({ platform, url }) => {
+  const { theme } = useTheme()
+  const isDark = theme === 'dark'
   const getIcon = (platform: string) => {
     switch (platform) {
       case 'github':
@@ -49,8 +52,11 @@ export const SocialIcon: React.FC<SocialIconProps> = ({ platform, url }) => {
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 transition-colors duration-300"
-      whileHover={{ scale: 1.2 }}
+      className="transition-colors duration-300"
+      style={{
+        color: isDark ? 'rgba(232,224,255,0.55)' : 'rgba(42,33,64,0.6)',
+      }}
+      whileHover={{ scale: 1.2, color: '#a78bfa' }}
       whileTap={{ scale: 0.9 }}
     >
       {getIcon(platform)}

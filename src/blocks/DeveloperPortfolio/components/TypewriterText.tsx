@@ -8,28 +8,35 @@ interface TypewriterTextProps {
   delay?: number
 }
 
-export const TypewriterText: React.FC<TypewriterTextProps> = ({ text, delay: _delay = 0 }) => {
+export const TypewriterText: React.FC<TypewriterTextProps> = ({ text, delay = 500 }) => {
   const [displayText, setDisplayText] = useState('')
-  const [currentIndex, setCurrentIndex] = useState(0)
+  const [started, setStarted] = useState(false)
+
+  // Wait for the hero entrance animation before starting to type so the
+  // typing effect is clearly visible.
+  useEffect(() => {
+    const start = setTimeout(() => setStarted(true), delay)
+    return () => clearTimeout(start)
+  }, [delay])
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (currentIndex < text.length) {
-        setDisplayText(text.slice(0, currentIndex + 1))
-        setCurrentIndex(currentIndex + 1)
-      }
-    }, 100)
-
-    return () => clearTimeout(timeout)
-  }, [currentIndex, text])
+    if (!started) return
+    if (displayText.length < text.length) {
+      const t = setTimeout(() => {
+        setDisplayText(text.slice(0, displayText.length + 1))
+      }, 120)
+      return () => clearTimeout(t)
+    }
+  }, [started, displayText, text])
 
   return (
     <span>
       {displayText}
       <motion.span
         animate={{ opacity: [0, 1, 0] }}
-        transition={{ duration: 1, repeat: Infinity }}
-        className="border-r-2 border-blue-600 ml-1"
+        transition={{ duration: 0.8, repeat: Infinity }}
+        className="border-r-2 ml-1"
+        style={{ borderColor: '#7c3aed' }}
       />
     </span>
   )

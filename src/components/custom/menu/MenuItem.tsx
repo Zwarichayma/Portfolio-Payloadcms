@@ -3,7 +3,7 @@ import { CustomLink } from '@/components/custom/CustomLink'
 import { Media } from '@/components/Media'
 import Image from 'next/image'
 import * as React from 'react'
-import { cn } from '../../../lib/utils'
+import { cn } from '@/utilities/ui'
 import CustomText from '../custom-text'
 import { DropdownMenu } from './DropdownMenu'
 import { useMenu } from './MenuContext'
@@ -37,10 +37,6 @@ const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(
     const [dropdownPosition, setDropdownPosition] = React.useState<{ top: number } | null>(null)
     const menuItemRef = React.useRef<HTMLDivElement>(null)
 
-    // Si aucun titre, ne rien afficher
-    const hasTitle = !!(title && String(title).trim())
-    if (!hasTitle) return null
-
     const isOpen = openMenu === uniqueMenuKey
 
     // Fermer le dropdown en cliquant en dehors
@@ -56,6 +52,10 @@ const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(
         return () => document.removeEventListener('mousedown', handleClickOutside)
       }
     }, [isOpen, setOpenMenu])
+
+    // Si aucun titre, ne rien afficher
+    const hasTitle = !!(title && String(title).trim())
+    if (!hasTitle) return null
 
     // Transformation des items en format attendu par DropdownMenu
     const dropdownItems = items.map((item: MenuItemData) => ({

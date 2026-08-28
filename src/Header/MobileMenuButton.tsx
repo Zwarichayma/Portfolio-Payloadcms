@@ -9,8 +9,7 @@ import React, { useEffect, useState } from 'react'
 export const MobileMenuButton: React.FC<{
   menus: HeaderType['menus']
   ctaButton: HeaderType['ctaButton']
-  consultantButton: HeaderType['consultantButton']
-}> = ({ menus, ctaButton, consultantButton }) => {
+}> = ({ menus, ctaButton }) => {
   const [isOpen, setIsOpen] = useState(false)
   const { theme } = useTheme()
 
@@ -80,7 +79,6 @@ export const MobileMenuButton: React.FC<{
         <MobileMenuContent
           menus={menus}
           ctaButton={ctaButton}
-          consultantButton={consultantButton}
           onClose={() => setIsOpen(false)}
           isOpen={isOpen}
         />

@@ -5,9 +5,16 @@ import { authenticatedOrPublished } from '../../access/authenticatedOrPublished'
 import { Archive } from '../../blocks/ArchiveBlock/config'
 import { CallToAction } from '../../blocks/CallToAction/config'
 import { Content } from '../../blocks/Content/config'
+import { ContactForm } from '../../blocks/ContactForm/config'
 import { DeveloperPortfolio } from '../../blocks/DeveloperPortfolio/config'
+import { Experience } from '../../blocks/Experience/config'
+import { Formation } from '../../blocks/Formation/config'
 import { FormBlock } from '../../blocks/Form/config'
 import { MediaBlock } from '../../blocks/MediaBlock/config'
+import { Projects } from '../../blocks/Projects/config'
+import { Skills } from '../../blocks/Skills/config'
+import { Stats } from '../../blocks/Stats/config'
+import { Testimonials } from '../../blocks/Testimonials/config'
 import { hero } from '@/heros/config'
 import { slugField } from '../../fields/slug'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
@@ -74,7 +81,7 @@ export const Pages: CollectionConfig<'pages'> = {
             {
               name: 'layout',
               type: 'blocks',
-              blocks: [CallToAction, Content, MediaBlock, Archive, FormBlock, DeveloperPortfolio,HeaderBlock],
+              blocks: [CallToAction, Content, MediaBlock, Archive, FormBlock, DeveloperPortfolio, HeaderBlock, Skills, Experience, Projects, Testimonials, ContactForm, Formation, Stats],
               required: true,
               admin: {
                 initCollapsed: true,

@@ -46,7 +46,7 @@ export const Header: GlobalConfig = {
     {
       name: 'menus',
       type: 'array',
-      label: 'Navigation Menus',
+      label: 'Navigation Items',
       fields: [menuField()],
       admin: {
         initCollapsed: true,
@@ -72,64 +72,6 @@ export const Header: GlobalConfig = {
             name: 'buttonLink',
           },
         }),
-      ],
-    },
-    {
-      name: 'consultantButton',
-      type: 'group',
-      label: 'Bouton "Trouver mon consultant" (Mobile uniquement)',
-      admin: {
-        description: 'Ce bouton apparaît uniquement dans le menu mobile, en bas de la navigation.',
-      },
-      fields: [
-        {
-          name: 'label',
-          type: 'text',
-          label: 'Label du bouton',
-          defaultValue: 'Trouver mon consultant',
-        },
-        {
-          type: 'row',
-          fields: [
-            {
-              name: 'linkType',
-              type: 'radio',
-              admin: {
-                layout: 'horizontal',
-                width: '100%',
-              },
-              defaultValue: 'reference',
-              options: [
-                {
-                  label: 'Internal link',
-                  value: 'reference',
-                },
-                {
-                  label: 'Custom URL',
-                  value: 'custom',
-                },
-              ],
-            },
-          ],
-        },
-        {
-          name: 'reference',
-          type: 'relationship',
-          admin: {
-            condition: (_, siblingData) => siblingData?.linkType === 'reference',
-          },
-          label: 'Document to link to',
-          relationTo: ['pages', 'posts'],
-        },
-        {
-          name: 'href',
-          type: 'text',
-          admin: {
-            condition: (_, siblingData) => siblingData?.linkType === 'custom',
-          },
-          label: 'Custom URL',
-          defaultValue: '/trouver-mon-consultant',
-        },
       ],
     },
     ...createdByAndUpdatedByFields,

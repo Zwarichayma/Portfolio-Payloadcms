@@ -1,20 +1,10 @@
-import type { Footer as FooterType, Media as MediaType } from '@/payload-types'
+import type { Media as MediaType } from '@/payload-types'
 import React from 'react'
 import { FooterClient } from './FooterClient'
 import { getGlobalFooter } from './getGlobalFooter'
 
-// Types TypeScript basés sur les types Payload générés
-type ServiceDescriptionType = NonNullable<FooterType['company']>['serviceDescription']
-type ContactType = NonNullable<FooterType['company']>['contact']
-type SectionsType = FooterType['sections']
-type CtaType = FooterType['cta']
-type CardsType = FooterType['cards']
-type LegalType = FooterType['legal']
-
-// Type pour FooterBlock
 export interface FooterBlockProps {
   blockType: 'footerBlock'
-  // Override flags
   overrideLogo?: boolean | null
   overrideServiceDescription?: boolean | null
   overrideContact?: boolean | null
@@ -22,15 +12,49 @@ export interface FooterBlockProps {
   overrideCta?: boolean | null
   overrideCards?: boolean | null
   overrideLegal?: boolean | null
-  // Content props
   logo?: string | MediaType | null
-  logoLink?: any | null
-  serviceDescription?: ServiceDescriptionType | null
-  contact?: ContactType | null
-  sections?: SectionsType | null
-  cta?: CtaType | null
-  cards?: CardsType | null
-  legal?: LegalType | null
+  logoLink?: Record<string, unknown> | null
+  serviceDescription?: {
+    title?: string | null
+    hours?: string | null
+    responseTime?: string | null
+  } | null
+  contact?: {
+    label?: string | null
+    value?: string | null
+    icon?: string | MediaType | null
+    id?: string | null
+  }[] | null
+  sections?: {
+    title?: string | null
+    items?: {
+      label?: string | null
+      linkData?: Record<string, unknown> | null
+      id?: string | null
+    }[] | null
+    id?: string | null
+  }[] | null
+  cta?: {
+    buttonText?: string | null
+    buttonLink?: Record<string, unknown> | null
+  } | null
+  cards?: {
+    selectra?: {
+      description?: string | null
+      logo?: string | MediaType | null
+    } | null
+    sce?: {
+      subtitle?: string | null
+      logo?: string | MediaType | null
+    } | null
+  } | null
+  legal?: {
+    links?: {
+      label?: string | null
+      linkData?: Record<string, unknown> | null
+      id?: string | null
+    }[] | null
+  } | null
   id?: string | null
   blockName?: string | null
 }
@@ -51,14 +75,12 @@ export const FooterBlock: React.FC<FooterBlockProps> = async ({
   cta,
   cards,
   legal,
-  ...rest
 }) => {
-  // Fetch global footer data on the server
   const globalFooter = await getGlobalFooter()
 
   return (
     <FooterClient
-      globalFooter={globalFooter}
+      globalFooter={globalFooter as any}
       overrideLogo={overrideLogo}
       overrideServiceDescription={overrideServiceDescription}
       overrideContact={overrideContact}

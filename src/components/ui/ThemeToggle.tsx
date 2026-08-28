@@ -44,6 +44,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
   if (variant === 'mobile') {
     return (
       <button
+        suppressHydrationWarning
         onClick={toggleTheme}
         className={`flex items-center justify-between w-full px-4 py-3 text-left transition-colors duration-200 border-t ${className}`}
         style={{
@@ -79,6 +80,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
 
   return (
     <button
+      suppressHydrationWarning
       onClick={toggleTheme}
       className={`relative inline-flex items-center justify-center w-10 h-10 p-2 rounded-lg border transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${className}`}
       style={getDefaultStyles()}

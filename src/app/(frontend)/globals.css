@@ -125,9 +125,105 @@
   --error: oklch(75% 0.15 25deg);
 }
 
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+
+  --portfolio-card: #ffffff;
+  --portfolio-card-hover: #faf7ff;
+  --portfolio-card-border: #e9e2ff;
+  --portfolio-card-bg: linear-gradient(135deg, #ffffff, #faf7ff, #f3ecff);
+  --portfolio-section-bg: #ffffff;
+  --portfolio-text-primary: #2a2140;
+  --portfolio-text-secondary: #4b3f73;
+  --portfolio-text-muted: #8a7bb0;
+  --portfolio-badge-bg: #f0eaff;
+  --portfolio-badge-text: #6d28d9;
+  --portfolio-gradient-from: #7c3aed;
+  --portfolio-gradient-to: #a855f7;
+  --portfolio-shadow: 0 8px 32px rgba(139, 92, 246, 0.12);
+  --portfolio-overlay: rgba(124, 58, 237, 0.05);
+  --primary: #7c3aed;
+  --primary-hover: #6d28d9;
+  --primary-blue: #a78bfa;
+  --primary-light: #c4b5fd;
+  --secondary: #191d1e;
+  --secondary-dark: #2a3032;
+  --emerald: #10d18333;
+  --gray-100: #f5f6f9;
+  --gray-200: #bfc6cc;
+  --gray-300: #939ba0;
+  --gray-400: #687175;
+  --gray-500: #030303;
+  --gray-light: #d9d9d9;
+  --gray-50: #fafafa;
+  --gray-lighter: #f5f5f5;
+  --text-dark: #1e1e1e;
+  --blue: #007aff;
+  --blue-hover: #0056b3;
+  --yellow-green: #aafe00;
+  --amber: #f9c80e;
+  --lilac-violet: #939afe;
+  --black: #000000;
+  --white: #ffffff;
+  /* RGB values for opacity backgrounds */
+  --primary-rgb: 124, 58, 237;
+  --secondary-rgb: 25, 29, 30;
+  --secondary-dark-rgb: 42, 48, 50;
+  --blue-rgb: 0, 122, 255;
+  --text-dark-rgb: 30, 30, 30;
+  --gray-100-rgb: 245, 246, 249;
+  --gray-400-rgb: 104, 113, 117;
+  --emerald-rgb: 16, 208, 131;
+  --yellow-green-rgb: 170, 254, 0;
+  --amber-rgb: 249, 200, 14;
+  --lilac-violet-rgb: 147, 154, 254;
+  /* Padding & Margins */
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-48: 48px;
+  --space-64: 64px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-40: 40px;
+  --space-56: 56px;
+  --space-80: 80px;
+
+  /* Gaps */
+  --gap-7: 7px; /* Utilisé pour l'espacement icône <----> texte */
+  --gap-20: 20px;
+  --gap-21: 21px;
+  --gap-32: 32px;
+  --gap-48: 48px;
+  --gap-64: 64px;
+  --gap-96: 96px;
+
+  /* Blocks */
+  --block-small: 96px;
+  --block-medium: 128px;
+  --block-large: 176px;
+}
+
 [data-theme='dark'] {
   --background: oklch(14.5% 0 0deg);
   --foreground: oklch(98.5% 0 0deg);
+
+  --portfolio-card: #17142a;
+  --portfolio-card-hover: #1e1836;
+  --portfolio-card-border: rgba(139, 92, 246, 0.18);
+  --portfolio-card-bg: linear-gradient(135deg, #17142a, #0c0a14, #1a1530);
+  --portfolio-section-bg: #0c0a14;
+  --portfolio-text-primary: #e8e0ff;
+  --portfolio-text-secondary: #c4b5fd;
+  --portfolio-text-muted: rgba(232, 224, 255, 0.5);
+  --portfolio-badge-bg: rgba(124, 58, 237, 0.12);
+  --portfolio-badge-text: #a78bfa;
+  --portfolio-gradient-from: #7c3aed;
+  --portfolio-gradient-to: #a855f7;
+  --portfolio-shadow: 0 8px 32px rgba(139, 92, 246, 0.12);
+  --portfolio-overlay: rgba(124, 58, 237, 0.08);
   --card: oklch(17% 0 0deg);
   --card-foreground: oklch(98.5% 0 0deg);
   --popover: oklch(14.5% 0 0deg);
@@ -203,6 +299,21 @@
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-error: var(--error);
+
+  --color-portfolio-card: var(--portfolio-card);
+  --color-portfolio-card-hover: var(--portfolio-card-hover);
+  --color-portfolio-card-border: var(--portfolio-card-border);
+  --color-portfolio-card-bg: var(--portfolio-card-bg);
+  --color-portfolio-section-bg: var(--portfolio-section-bg);
+  --color-portfolio-text-primary: var(--portfolio-text-primary);
+  --color-portfolio-text-secondary: var(--portfolio-text-secondary);
+  --color-portfolio-text-muted: var(--portfolio-text-muted);
+  --color-portfolio-badge-bg: var(--portfolio-badge-bg);
+  --color-portfolio-badge-text: var(--portfolio-badge-text);
+  --color-portfolio-gradient-from: var(--portfolio-gradient-from);
+  --color-portfolio-gradient-to: var(--portfolio-gradient-to);
+  --color-portfolio-shadow: var(--portfolio-shadow);
+  --color-portfolio-overlay: var(--portfolio-overlay);
 }
 
 @layer base {
@@ -214,13 +325,26 @@
   }
 }
 
-html {
+/* Prevent theme flash: hide the page until the theme is applied... */
+html:not([data-theme]) {
   opacity: 0;
 }
 
 html[data-theme='dark'],
 html[data-theme='light'] {
-  opacity: initial;
+  opacity: 1;
+}
+
+/* ...but never keep the page invisible if the theme init script is delayed,
+   blocked or missing: reveal it after a short timeout regardless. */
+@keyframes portfolio-force-reveal {
+  to {
+    opacity: 1;
+  }
+}
+
+html:not([data-theme]) {
+  animation: portfolio-force-reveal 0.01s 2s forwards;
 }
 
 @layer components {
@@ -252,78 +376,9 @@ html[data-theme='light'] {
   }
 }
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --primary: #397dff;
-  --primary-hover: #2d6de6;
-  --primary-blue: #0d7fff;
-  --primary-light: #abc8ff;
-  --secondary: #191d1e;
-  --secondary-dark: #2a3032;
-  --emerald: #10d18333;
-  --gray-100: #f5f6f9;
-  --gray-200: #bfc6cc;
-  --gray-300: #939ba0;
-  --gray-400: #687175;
-  --gray-500: #030303;
-  --gray-light: #d9d9d9;
-  --gray-50: #fafafa;
-  --gray-lighter: #f5f5f5;
-  --text-dark: #1e1e1e;
-  --blue: #007aff;
-  --blue-hover: #0056b3;
-  --yellow-green: #aafe00;
-  --amber: #f9c80e;
-  --lilac-violet: #939afe;
-  --black: #000000;
-  --white: #ffffff;
-  /* RGB values for opacity backgrounds */
-  --primary-rgb: 57, 125, 255;
-  --secondary-rgb: 25, 29, 30;
-  --secondary-dark-rgb: 42, 48, 50;
-  --blue-rgb: 0, 122, 255;
-  --text-dark-rgb: 30, 30, 30;
-  --gray-100-rgb: 245, 246, 249;
-  --gray-400-rgb: 104, 113, 117;
-  --emerald-rgb: 16, 208, 131;
-  --yellow-green-rgb: 170, 254, 0;
-  --amber-rgb: 249, 200, 14;
-  --lilac-violet-rgb: 147, 154, 254;
-  /* Padding & Margins */
-  --space-16: 16px;
-  --space-20: 20px;
-  --space-24: 24px;
-  --space-32: 32px;
-  --space-48: 48px;
-  --space-64: 64px;
-  --space-8: 8px;
-  --space-12: 12px;
-  --space-40: 40px;
-  --space-56: 56px;
-  --space-80: 80px;
 
-  /* Gaps */
-  --gap-7: 7px; /* Utilisé pour l'espacement icône <----> texte */
-  --gap-20: 20px;
-  --gap-21: 21px;
-  --gap-32: 32px;
-  --gap-48: 48px;
-  --gap-64: 64px;
-  --gap-96: 96px;
 
-  /* Blocks */
-  --block-small: 96px;
-  --block-medium: 128px;
-  --block-large: 176px;
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
 
 html {
   scroll-behavior: smooth;

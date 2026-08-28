@@ -4,16 +4,51 @@ import CustomText from '@/components/custom/custom-text'
 import { CustomButton } from '@/components/custom/CustomButton'
 import { CustomLink } from '@/components/custom/CustomLink'
 import { Media as MediaComponent } from '@/components/Media'
-import type { Footer as FooterType, Media as MediaType } from '@/payload-types'
+import type { Media as MediaType } from '@/payload-types'
 import React from 'react'
 
-// Types TypeScript basés sur les types Payload générés
-type ServiceDescriptionType = NonNullable<FooterType['company']>['serviceDescription']
-type ContactType = NonNullable<FooterType['company']>['contact']
-type SectionsType = FooterType['sections']
-type CtaType = FooterType['cta']
-type CardsType = FooterType['cards']
-type LegalType = FooterType['legal']
+// Inline types matching the FooterBlock config fields
+type ServiceDescriptionType = {
+  title?: string | null
+  hours?: string | null
+  responseTime?: string | null
+} | null
+type ContactType = {
+  label?: string | null
+  value?: string | null
+  icon?: string | MediaType | null
+  id?: string | null
+}[] | null
+type SectionsType = {
+  title?: string | null
+  items?: {
+    label?: string | null
+    linkData?: Record<string, unknown> | null
+    id?: string | null
+  }[] | null
+  id?: string | null
+}[] | null
+type CtaType = {
+  buttonText?: string | null
+  buttonLink?: Record<string, unknown> | null
+} | null
+type CardsType = {
+  selectra?: {
+    description?: string | null
+    logo?: string | MediaType | null
+  } | null
+  sce?: {
+    subtitle?: string | null
+    logo?: string | MediaType | null
+  } | null
+} | null
+type LegalType = {
+  links?: {
+    label?: string | null
+    linkData?: Record<string, unknown> | null
+    id?: string | null
+  }[] | null
+} | null
 
 // Helper function to get link props from either new or legacy format
 const getLinkProps = (item: any) => {
@@ -45,8 +80,7 @@ const getLinkProps = (item: any) => {
 }
 
 export interface FooterClientProps {
-  // Data passed from server component
-  globalFooter?: FooterType | null
+  globalFooter?: any | null
   // Override flags
   overrideLogo?: boolean | null
   overrideServiceDescription?: boolean | null
@@ -181,7 +215,7 @@ export const FooterClient: React.FC<FooterClientProps> = ({
             {/* Contact Info */}
             {hasContact && contactToUse && (
               <div>
-                {contactToUse.map((contactItem, index) => (
+                {contactToUse.map((contactItem: NonNullable<ContactType>[number], index: number) => (
                   <div key={index} className="flex items-center gap-7 mb-16">
                     {contactItem.icon && (
                       <MediaComponent
@@ -321,7 +355,7 @@ export const FooterClient: React.FC<FooterClientProps> = ({
                       tracking="standard"
                       customColor="var(--gray-300)"
                     >
-                      {cardsToUse.selectra.description.split('\\n').map((line, index, arr) => (
+                      {cardsToUse.selectra.description.split('\\n').map((line: string, index: number, arr: string[]) => (
                         <span key={index}>
                           {line}
                           {index < arr.length - 1 && <br />}
@@ -368,7 +402,7 @@ export const FooterClient: React.FC<FooterClientProps> = ({
         {hasLegal && legalToUse?.links && (
           <div className="mt-32 pt-20 border-t border-gray-300/50">
             <div className="flex flex-wrap gap-32">
-              {legalToUse.links.map((linkItem, index) => {
+              {legalToUse?.links?.map((linkItem: NonNullable<NonNullable<LegalType>['links']>[number], index: number) => {
                 const linkProps = getLinkProps(linkItem)
                 return (
                   <CustomLink

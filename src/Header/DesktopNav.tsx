@@ -14,10 +14,10 @@ interface DesktopNavProps {
 }
 
 export const DesktopNav: React.FC<DesktopNavProps> = ({ menus }) => {
-  if (!menus || menus.length === 0) return null
-
   const [openMenu, setOpenMenu] = useState<string | null>(null)
   const headerRef = useRef<HTMLElement | null>(null)
+
+  if (!menus || menus.length === 0) return null
 
   return (
     <>
@@ -74,6 +74,20 @@ const DesktopMenuItem: React.FC<{
   const menuItemRef = useRef<HTMLDivElement>(null)
   const uniqueMenuKey = `menu-${menuIndex}`
   const isOpen = openMenu === uniqueMenuKey
+
+  // Gestion du clic en dehors
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuItemRef.current && !menuItemRef.current.contains(event.target as Node)) {
+        setOpenMenu(null)
+      }
+    }
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+      return () => document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isOpen, setOpenMenu])
 
   const hasTitle = !!(title && String(title).trim())
   if (!hasTitle) return null
@@ -148,20 +162,6 @@ const DesktopMenuItem: React.FC<{
   }
 
   const handleDropdownItemClick = () => setOpenMenu(null)
-
-  // Gestion du clic en dehors
-  React.useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (menuItemRef.current && !menuItemRef.current.contains(event.target as Node)) {
-        setOpenMenu(null)
-      }
-    }
-
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside)
-      return () => document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [isOpen, setOpenMenu])
 
   // Direct link
   if (menuLinkUrl) {

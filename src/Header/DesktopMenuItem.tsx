@@ -37,6 +37,20 @@ export const DesktopMenuItem: React.FC<DesktopMenuItemProps> = ({
   const [isOpen, setIsOpen] = useState(false)
   const menuItemRef = useRef<HTMLDivElement>(null)
 
+  // Gestion du clic en dehors
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuItemRef.current && !menuItemRef.current.contains(event.target as Node)) {
+        setIsOpen(false)
+      }
+    }
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+      return () => document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isOpen])
+
   const hasTitle = !!(title && String(title).trim())
   if (!hasTitle) return null
 
@@ -69,20 +83,6 @@ export const DesktopMenuItem: React.FC<DesktopMenuItemProps> = ({
   const handleItemClick = () => {
     setIsOpen(false)
   }
-
-  // Gestion du clic en dehors
-  React.useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (menuItemRef.current && !menuItemRef.current.contains(event.target as Node)) {
-        setIsOpen(false)
-      }
-    }
-
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside)
-      return () => document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [isOpen])
 
   // Direct link - pas de dropdown
   if (menuLinkUrl) {
