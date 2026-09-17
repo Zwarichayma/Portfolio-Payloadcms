@@ -8,6 +8,15 @@ export const ContactForm: Block = {
   fields: [
     anchorIdField('contactForm'),
     {
+      name: 'codeLabel',
+      type: 'text',
+      label: 'Code Label',
+      defaultValue: '// 07 — contact',
+      admin: {
+        description: 'Badge mono affiché au-dessus du titre (ex: // 07 — contact)',
+      },
+    },
+    {
       name: 'title',
       type: 'text',
       required: true,

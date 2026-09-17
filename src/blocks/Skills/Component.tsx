@@ -6,6 +6,7 @@ import type { SkillsBlock as SkillsBlockType } from '@/payload-types'
 import { Media } from '@/components/Media'
 import { useTheme } from '@/providers/Theme'
 import { SkillCard } from './components/SkillCard'
+import { SkillCategoryCard } from './components/SkillCategoryCard'
 import { ProgressBar } from './components/ProgressBar'
 import { CircularProgress } from './components/CircularProgress'
 import { ParticleBackground } from './components/ParticleBackground'
@@ -16,6 +17,7 @@ type Props = {
 
 const SkillsBlockComponent: React.FC<Props> = ({
   title,
+  codeLabel,
   subtitle,
   description,
   skills,
@@ -26,7 +28,7 @@ const SkillsBlockComponent: React.FC<Props> = ({
   disableInnerContainer,
 }) => {
   const { theme } = useTheme()
-  
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -52,7 +54,7 @@ const SkillsBlockComponent: React.FC<Props> = ({
     visible: {
       scale: 1,
       opacity: 1,
-      transition: { duration: 0.5, ease: "backOut" as const },
+      transition: { duration: 0.5, ease: 'backOut' as const },
     },
   }
 
@@ -96,14 +98,14 @@ const SkillsBlockComponent: React.FC<Props> = ({
   }
 
   return (
-    <div 
+    <div
       className="relative py-16 md:py-24 overflow-hidden transition-colors duration-300"
       style={{
         backgroundColor: theme === 'dark' ? '#0c0a14' : '#fbfaff',
       }}
     >
       {showParticles && <ParticleBackground />}
-      
+
       {backgroundImage && (
         <div className="absolute inset-0 opacity-10 dark:opacity-5">
           <Media resource={backgroundImage} className="w-full h-full object-cover" />
@@ -120,6 +122,20 @@ const SkillsBlockComponent: React.FC<Props> = ({
       >
         {/* Header Section */}
         <div className="text-center mb-16">
+          {codeLabel && (
+            <motion.span
+              className="inline-block mb-3 text-xs px-3 py-1 rounded"
+              style={{
+                background: 'rgba(124,58,237,0.12)',
+                color: '#a78bfa',
+                border: '1px solid rgba(124,58,237,0.2)',
+                fontFamily: "'JetBrains Mono', monospace",
+              }}
+              variants={getAnimationVariants()}
+            >
+              {codeLabel}
+            </motion.span>
+          )}
           <motion.h2
             className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 bg-linear-to-r from-[#a78bfa] to-[#7c3aed] bg-clip-text text-transparent"
             variants={getAnimationVariants()}
@@ -146,12 +162,23 @@ const SkillsBlockComponent: React.FC<Props> = ({
           )}
         </div>
 
-        {/* Skills Display */}
-        {skills && skills.length > 0 && displayStyle !== 'cardSwap' && displayStyle !== 'chart' && (
-          <motion.div
-            className={`grid ${getGridColumns()} gap-6`}
-            variants={containerVariants}
-          >
+        {/* Skills Display — category cards with skill bars (reference design) */}
+        {skills && skills.length > 0 && displayStyle === 'grid' && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {Array.from(new Set(skills.map((s) => s.category || 'other'))).map((category, ci) => (
+              <SkillCategoryCard
+                key={category}
+                category={category}
+                skills={skills.filter((s) => (s.category || 'other') === category)}
+                index={ci}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Progress / Circular Display */}
+        {skills && skills.length > 0 && (displayStyle === 'progress' || displayStyle === 'circular') && (
+          <motion.div className={`grid ${getGridColumns()} gap-6`} variants={containerVariants}>
             {skills.map((skill, index) => (
               <motion.div
                 key={index}
@@ -159,25 +186,12 @@ const SkillsBlockComponent: React.FC<Props> = ({
                 whileHover={{ scale: 1.05 }}
                 className="transition-transform duration-300"
               >
-                {displayStyle === 'grid' && (
-                  <SkillCard 
-                    skill={skill} 
-                    gradientColor={getCategoryColor(skill.category || 'other')}
-                  />
-                )}
-                
                 {displayStyle === 'progress' && (
-                  <ProgressBar 
-                    skill={skill} 
-                    gradientColor={getCategoryColor(skill.category || 'other')}
-                  />
+                  <ProgressBar skill={skill} gradientColor={getCategoryColor(skill.category || 'other')} />
                 )}
-                
+
                 {displayStyle === 'circular' && (
-                  <CircularProgress 
-                    skill={skill} 
-                    gradientColor={getCategoryColor(skill.category || 'other')}
-                  />
+                  <CircularProgress skill={skill} gradientColor={getCategoryColor(skill.category || 'other')} />
                 )}
               </motion.div>
             ))}
@@ -186,11 +200,18 @@ const SkillsBlockComponent: React.FC<Props> = ({
 
         {/* Scroll Carousel Display Style */}
         {skills && skills.length > 0 && displayStyle === 'cardSwap' && (
-          <motion.div
-            className="relative max-w-5xl mx-auto"
-            variants={getAnimationVariants()}
-          >
-            <div className="flex gap-6 overflow-x-auto pb-4 px-1 snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <motion.div className="relative max-w-5xl mx-auto" variants={getAnimationVariants()}>
+            {/*
+              FIX: `overflow-x-auto` alone forces `overflow-y` to compute as `auto` too
+              (per the CSS Overflow spec, an axis left at `visible` while the other isn't
+              gets promoted to `auto`). That silently clips anything that moves or grows
+              outside the container vertically — including SkillCard's `whileHover={{ y: -4 }}`
+              lift and its wider hover box-shadow — which is what made cards look like they
+              were being "hidden" on hover.
+              `pt-3`/`pb-6` (instead of just `pb-4`) give that vertical movement room on
+              both edges so it never gets clipped by the now-implicit `overflow-y: auto`.
+            */}
+            <div className="flex gap-6 overflow-x-auto pt-3 pb-6 px-1 snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {skills.map((skill, index) => (
                 <div key={index} className="snap-start">
                   <SkillCard skill={skill} variant="landscape" />
@@ -213,10 +234,12 @@ const SkillsBlockComponent: React.FC<Props> = ({
                   Skills by Category
                 </h4>
                 <div className="space-y-4">
-                  {Array.from(new Set(skills.map(skill => skill.category))).map((category, index) => {
-                    const categorySkills = skills.filter(skill => skill.category === category)
-                    const avgPercentage = categorySkills.reduce((sum, skill) => sum + (skill.percentage || 0), 0) / categorySkills.length
-                    
+                  {Array.from(new Set(skills.map((skill) => skill.category))).map((category, index) => {
+                    const categorySkills = skills.filter((skill) => skill.category === category)
+                    const avgPercentage =
+                      categorySkills.reduce((sum, skill) => sum + (skill.percentage || 0), 0) /
+                      categorySkills.length
+
                     return (
                       <div key={index} className="relative">
                         <div className="flex justify-between mb-2">
@@ -243,9 +266,7 @@ const SkillsBlockComponent: React.FC<Props> = ({
 
               {/* Top Skills */}
               <div>
-                <h4 className="text-xl font-semibold mb-6 text-[#2a2140] dark:text-white">
-                  Top Skills
-                </h4>
+                <h4 className="text-xl font-semibold mb-6 text-[#2a2140] dark:text-white">Top Skills</h4>
                 <div className="space-y-3">
                   {[...skills]
                     .sort((a, b) => (b.percentage || 0) - (a.percentage || 0))
@@ -297,7 +318,7 @@ const SkillsBlockComponent: React.FC<Props> = ({
               duration: 6,
               repeat: Infinity,
               delay: index * 0.8,
-              ease: "easeInOut",
+              ease: 'easeInOut',
             }}
             style={{
               left: `${Math.random() * 90}%`,

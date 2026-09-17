@@ -8,6 +8,15 @@ export const Formation: Block = {
   fields: [
     anchorIdField('formation'),
     {
+      name: 'codeLabel',
+      type: 'text',
+      label: 'Code Label',
+      defaultValue: '// 06 — formation',
+      admin: {
+        description: 'Badge mono affiché au-dessus du titre (ex: // 06 — formation)',
+      },
+    },
+    {
       name: 'title',
       type: 'text',
       required: true,

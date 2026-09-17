@@ -7,6 +7,7 @@ import { Media } from '@/components/Media'
 import { useTheme } from '@/providers/Theme'
 import { Particles } from '@/components/custom/Particles'
 import { LiquidEtherBackground } from '@/components/custom/LiquidEtherBackground'
+import { SectionLabel } from '@/components/custom/SectionLabel'
 
 type Props = {
   disableInnerContainer?: boolean
@@ -16,6 +17,7 @@ const easeFluid = [0.16, 1, 0.3, 1] as const
 
 const StatsBlockComponent: React.FC<Props> = ({
   title,
+  codeLabel,
   subtitle,
   stats,
   columns,
@@ -62,7 +64,7 @@ const StatsBlockComponent: React.FC<Props> = ({
       )}
 
       <div className="relative z-10 w-full max-w-6xl mx-auto px-6">
-        {(title || subtitle) && (
+        {(title || subtitle || codeLabel) && (
           <motion.div
             className="text-center mb-12"
             initial="hidden"
@@ -70,6 +72,7 @@ const StatsBlockComponent: React.FC<Props> = ({
             viewport={{ once: true, margin: '-50px' }}
             variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
           >
+            <SectionLabel code={codeLabel} />
             {title && (
               <motion.h2
                 className="text-3xl md:text-4xl font-bold mb-3"

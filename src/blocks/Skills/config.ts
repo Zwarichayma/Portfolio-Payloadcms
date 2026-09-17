@@ -12,12 +12,13 @@ export const Skills: Block = {
       type: 'text',
       required: true,
       label: 'Section Title',
-      defaultValue: 'My Skills',
+      defaultValue: 'Technical Skills',
     },
     {
       name: 'codeLabel',
       type: 'text',
       label: 'Code Label',
+      defaultValue: '// 04 — skills',
       admin: {
         description: 'Badge mono affiché au-dessus du titre (ex: // 04 — skills)',
       },
@@ -26,7 +27,6 @@ export const Skills: Block = {
       name: 'subtitle',
       type: 'text',
       label: 'Subtitle',
-      defaultValue: 'Technologies I work with',
     },
     {
       name: 'description',
@@ -39,6 +39,21 @@ export const Skills: Block = {
       label: 'Skills',
       required: true,
       minRows: 1,
+      defaultValue: [
+        { name: 'JavaScript / TypeScript', level: 'expert', percentage: 92, category: 'frontend', color: 'blue' },
+        { name: 'Next.js & React', level: 'expert', percentage: 93, category: 'frontend', color: 'purple' },
+        { name: 'Tailwind CSS', level: 'advanced', percentage: 88, category: 'frontend', color: 'teal' },
+        { name: 'Node.js', level: 'advanced', percentage: 85, category: 'backend', color: 'green' },
+        { name: 'Python', level: 'advanced', percentage: 75, category: 'backend', color: 'green' },
+        { name: 'MongoDB', level: 'advanced', percentage: 85, category: 'database', color: 'green' },
+        { name: 'PostgreSQL / MySQL', level: 'intermediate', percentage: 72, category: 'database', color: 'blue' },
+        { name: 'Git / GitLab / GitHub', level: 'expert', percentage: 90, category: 'devops', color: 'orange' },
+        { name: 'Docker', level: 'intermediate', percentage: 65, category: 'devops', color: 'blue' },
+        { name: 'Payload CMS', level: 'expert', percentage: 95, category: 'other', color: 'purple' },
+        { name: 'Strapi', level: 'advanced', percentage: 82, category: 'other', color: 'green' },
+        { name: 'React Native', level: 'advanced', percentage: 78, category: 'mobile', color: 'indigo' },
+        { name: 'n8n (AI workflows)', level: 'advanced', percentage: 78, category: 'other', color: 'indigo' },
+      ],
       fields: [
         {
           name: 'name',

@@ -1,4 +1,5 @@
 export { SkillCard } from './SkillCard'
+export { SkillCategoryCard } from './SkillCategoryCard'
 export { ProgressBar } from './ProgressBar'
 export { CircularProgress } from './CircularProgress'
 export { ParticleBackground } from './ParticleBackground'

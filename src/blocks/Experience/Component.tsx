@@ -1,12 +1,12 @@
 'use client'
 
 import React, { useRef, useState } from 'react'
-import { motion, useScroll, useTransform, type Variants } from 'framer-motion'
+import { AnimatePresence, motion, useScroll, useTransform, type Variants } from 'framer-motion'
+import { Building2, Calendar, CheckCircle2, ChevronDown, MapPin } from 'lucide-react'
 import type { ExperienceBlock as ExperienceBlockType } from '@/payload-types'
 import { Media } from '@/components/Media'
 import { useTheme } from '@/providers/Theme'
 import { Particles } from '@/components/custom/Particles'
-import { LiquidEtherBackground } from '@/components/custom/LiquidEtherBackground'
 
 type Props = {
   disableInnerContainer?: boolean
@@ -22,17 +22,15 @@ const ExperienceBlockComponent: React.FC<Props> = ({
   description,
   codeLabel,
   experiences,
-  layout = 'vertical',
-  animationStyle = 'fadeIn',
   showParticles,
   backgroundImage,
-  disableInnerContainer: _disableInnerContainer,
 }) => {
   const { theme } = useTheme()
   const isDark = theme === 'dark'
   const sectionRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start end', 'end start'] })
   const sectionY = useTransform(scrollYProgress, [0, 1], ['6%', '-6%'])
+  const [openIdx, setOpenIdx] = useState<number | null>(0)
 
   const sorted = [...(experiences || [])].sort((a, b) => {
     const aDate = a.startDate ? new Date(a.startDate).getTime() : 0
@@ -113,28 +111,6 @@ const ExperienceBlockComponent: React.FC<Props> = ({
     visible: { y: 0, opacity: 1, transition: { duration: 0.6, ease: easePro } },
   }
 
-  const cardVariants: Variants = {
-    hidden: { y: 40, opacity: 0, scale: 0.97 },
-    visible: { y: 0, opacity: 1, scale: 1, transition: { duration: 0.6, ease: easePro } },
-  }
-
-  const getCardVariants = (): Variants => {
-    switch (animationStyle) {
-      case 'reveal':
-        return {
-          hidden: { opacity: 0, x: -30 },
-          visible: { opacity: 1, x: 0, transition: { duration: 0.7, ease: easePro } },
-        }
-      case 'slideUp':
-        return {
-          hidden: { y: 60, opacity: 0 },
-          visible: { y: 0, opacity: 1, transition: { duration: 0.7, ease: easePro } },
-        }
-      default:
-        return cardVariants
-    }
-  }
-
   return (
     <div
       ref={sectionRef}
@@ -195,27 +171,31 @@ const ExperienceBlockComponent: React.FC<Props> = ({
           )}
         </motion.div>
 
-        <motion.div
-          className={layout === 'horizontal' ? 'max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4' : layout === 'compact' ? 'max-w-2xl mx-auto space-y-2' : 'max-w-3xl mx-auto space-y-4'}
-          variants={{ visible: { transition: { staggerChildren: 0.1, delayChildren: 0.1 } } }}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-50px' }}
-        >
-          {sorted.map((exp, index) => (
-            <ExperienceCard
-              key={index}
-              exp={exp}
-              index={index}
-              isDark={isDark}
-              getTypeIcon={getTypeIcon}
-              getTypeColor={getTypeColor}
-              getTechColor={getTechColor}
-              formatDate={formatDate}
-              cardVariants={getCardVariants()}
-            />
-          ))}
-        </motion.div>
+        {/* Timeline + collapsible cards */}
+        <div className="relative max-w-3xl mx-auto">
+          {/* Vertical line */}
+          <div
+            className="absolute left-0 top-0 bottom-0 ml-5 hidden w-px md:block"
+            style={{ background: 'linear-gradient(to bottom, rgba(124,58,237,0.5), rgba(124,58,237,0.05))' }}
+          />
+
+          <div className="space-y-4">
+            {sorted.map((exp, index) => (
+              <ExperienceCard
+                key={index}
+                exp={exp}
+                index={index}
+                isDark={isDark}
+                isOpen={openIdx === index}
+                onToggle={() => setOpenIdx(openIdx === index ? null : index)}
+                getTypeIcon={getTypeIcon}
+                getTypeColor={getTypeColor}
+                getTechColor={getTechColor}
+                formatDate={formatDate}
+              />
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   )
@@ -225,146 +205,159 @@ const ExperienceCard: React.FC<{
   exp: Experience
   index: number
   isDark: boolean
+  isOpen: boolean
+  onToggle: () => void
   getTypeIcon: (type: string) => React.ReactNode
   getTypeColor: (type: string) => string
   getTechColor: (color: string) => string
   formatDate: (date: string) => string
-  cardVariants: Variants
-}> = ({ exp, index, isDark, getTypeIcon, getTypeColor, getTechColor, formatDate, cardVariants }) => {
-  const cardRef = useRef<HTMLDivElement>(null)
-  const [mousePos, setMousePos] = useState({ x: 50, y: 50 })
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!cardRef.current) return
-    const rect = cardRef.current.getBoundingClientRect()
-    setMousePos({
-      x: ((e.clientX - rect.left) / rect.width) * 100,
-      y: ((e.clientY - rect.top) / rect.height) * 100,
-    })
-  }
-
+}> = ({ exp, index, isDark, isOpen, onToggle, getTypeIcon, getTypeColor, getTechColor, formatDate }) => {
   const typeColor = getTypeColor(exp.type || 'work')
+  const muted = isDark ? 'rgba(232,224,255,0.45)' : '#8a7bb0'
+  const textColor = isDark ? '#e8e0ff' : '#2a2140'
+
+  const period = `${formatDate(exp.startDate)} — ${
+    exp.current ? 'Present' : exp.endDate ? formatDate(exp.endDate) : 'Present'
+  }`
 
   return (
     <motion.div
-      key={index}
-      variants={cardVariants}
+      className="relative md:pl-16"
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-60px' }}
+      transition={{ duration: 0.5, ease: easePro, delay: index * 0.1 }}
     >
+      {/* Timeline dot */}
       <div
-        ref={cardRef}
-        className="group relative isolate overflow-hidden rounded-2xl will-change-transform"
+        className="absolute left-3 top-5 hidden h-5 w-5 items-center justify-center rounded-full md:flex"
         style={{
-          backgroundColor: isDark ? 'rgba(23,20,42,0.6)' : 'rgba(255,255,255,0.7)',
-          border: `1px solid ${isDark ? 'rgba(139,92,246,0.15)' : 'rgba(139,92,246,0.2)'}`,
-          backdropFilter: 'blur(12px)',
-          WebkitBackdropFilter: 'blur(12px)',
-          boxShadow: isDark
-            ? '0 1px 2px 0 rgb(0 0 0 / 0.3), inset 0 1px 0 0 rgb(255 255 255 / 0.03)'
-            : '0 1px 2px 0 rgb(0 0 0 / 0.03), inset 0 1px 0 0 rgb(255 255 255 / 0.8)',
-          transition: 'transform 0.5s cubic-bezier(0.19, 1, 0.22, 1), box-shadow 0.5s cubic-bezier(0.19, 1, 0.22, 1)',
-        }}
-        onMouseMove={handleMouseMove}
-        onMouseEnter={(e) => {
-          const el = e.currentTarget
-          el.style.boxShadow = isDark
-            ? '0 20px 40px -12px rgb(0 0 0 / 0.5), 0 0 0 1px rgba(124,58,237,0.2), inset 0 1px 0 0 rgba(255,255,255,0.05)'
-            : '0 20px 40px -12px rgb(0 0 0 / 0.08), 0 0 0 1px rgba(124,58,237,0.15), inset 0 1px 0 0 rgba(255,255,255,0.9)'
-          el.style.transform = 'translateY(-3px)'
-        }}
-        onMouseLeave={(e) => {
-          const el = e.currentTarget
-          el.style.boxShadow = isDark
-            ? '0 1px 2px 0 rgb(0 0 0 / 0.3), inset 0 1px 0 0 rgb(255 255 255 / 0.03)'
-            : '0 1px 2px 0 rgb(0 0 0 / 0.03), inset 0 1px 0 0 rgb(255 255 255 / 0.8)'
-          el.style.transform = 'translateY(0)'
+          background: isDark ? '#0c0a14' : '#fbfaff',
+          border: `2px solid ${typeColor}`,
         }}
       >
-        <LiquidEtherBackground />
+        <span className="h-2 w-2 rounded-full" style={{ background: typeColor }} />
+      </div>
 
-        <div
-          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 rounded-2xl"
-          style={{
-            background: isDark
-              ? `radial-gradient(600px circle at ${mousePos.x}% ${mousePos.y}%, rgba(124,58,237,0.06), transparent 60%)`
-              : `radial-gradient(600px circle at ${mousePos.x}% ${mousePos.y}%, rgba(124,58,237,0.04), transparent 60%)`,
-          }}
-        />
+      <div
+        className="cursor-pointer overflow-hidden rounded-xl"
+        style={{
+          background: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(255,255,255,0.7)',
+          border: isOpen ? '1px solid rgba(124,58,237,0.35)' : '1px solid rgba(139,92,246,0.1)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          transition: 'border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease',
+        }}
+        onClick={onToggle}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = 'translateY(-3px)'
+          e.currentTarget.style.boxShadow = '0 8px 32px rgba(139,92,246,0.12)'
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = 'translateY(0)'
+          e.currentTarget.style.boxShadow = 'none'
+        }}
+      >
+        {/* Header */}
+        <div className="flex items-start gap-4 p-5">
+          <div
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg"
+            style={{ background: `${typeColor}1f`, border: `1px solid ${typeColor}33`, color: typeColor }}
+          >
+            {getTypeIcon(exp.type || 'work')}
+          </div>
 
-        <div
-          className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-          style={{
-            background: isDark
-              ? 'linear-gradient(180deg, rgba(124,58,237,0.03) 0%, transparent 50%)'
-              : 'linear-gradient(180deg, rgba(124,58,237,0.02) 0%, transparent 50%)',
-          }}
-        />
-
-        <div className="relative z-10 p-5">
-          <div className="flex items-start gap-4">
-            <div
-              className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5"
-              style={{
-                backgroundColor: isDark ? `${typeColor}1a` : `${typeColor}0d`,
-                color: typeColor,
-              }}
-            >
-              {getTypeIcon(exp.type || 'work')}
+          <div className="min-w-0 flex-1">
+            <div className="mb-1 flex flex-wrap items-center gap-2">
+              <span className="text-base font-semibold" style={{ color: textColor }}>
+                {exp.title}
+              </span>
+              <span
+                className="rounded px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide"
+                style={{ background: `${typeColor}1f`, color: typeColor }}
+              >
+                {exp.type || 'work'}
+              </span>
             </div>
 
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1.5">
-                <span
-                  className="text-[11px] font-medium px-2 py-0.5 rounded-md"
-                  style={{
-                    backgroundColor: isDark ? `${typeColor}1a` : `${typeColor}0d`,
-                    color: typeColor,
-                  }}
-                >
-                  {exp.type?.charAt(0).toUpperCase() + exp.type?.slice(1) || 'Work'}
+            <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs" style={{ color: muted }}>
+              {exp.organization && (
+                <span className="flex items-center gap-1">
+                  <Building2 size={11} />
+                  {exp.organization}
                 </span>
-                <span className="text-[11px]" style={{ color: isDark ? 'rgba(232,224,255,0.45)' : '#8a7bb0' }}>
-                  {formatDate(exp.startDate)} — {exp.current ? 'Present' : exp.endDate ? formatDate(exp.endDate) : 'Present'}
-                  {exp.location && ` · ${exp.location}`}
+              )}
+              {exp.location && (
+                <span className="flex items-center gap-1">
+                  <MapPin size={11} />
+                  {exp.location}
                 </span>
-              </div>
-
-              <h3 className="text-[15px] font-semibold leading-snug" style={{ color: isDark ? '#e8e0ff' : '#2a2140' }}>
-                {exp.title}
-              </h3>
-
-              <p className="text-[13px] font-medium mt-0.5 mb-2" style={{ color: typeColor }}>
-                {exp.organization}
-              </p>
-
-              {exp.description && (
-                <p className="text-[13px] leading-relaxed mb-2" style={{ color: isDark ? 'rgba(232,224,255,0.55)' : '#8a7bb0' }}>
-                  {exp.description}
-                </p>
               )}
-
-              {exp.highlights && exp.highlights.length > 0 && (
-                <ul className="space-y-1 mb-2">
-                  {exp.highlights.map((h, i) => (
-                    <li key={i} className="flex items-start gap-2 text-[13px]" style={{ color: isDark ? 'rgba(232,224,255,0.55)' : '#8a7bb0' }}>
-                      <span className="mt-1.5 w-1 h-1 rounded-full flex-shrink-0" style={{ backgroundColor: isDark ? 'rgba(139,92,246,0.5)' : '#a78bfa' }} />
-                      {h.text}
-                    </li>
-                  ))}
-                </ul>
-              )}
-
-              {exp.technologies && exp.technologies.length > 0 && (
-                <div className="flex flex-wrap gap-1">
-                  {exp.technologies.map((tech, i) => (
-                    <span key={i} className={`text-[10px] px-2 py-0.5 rounded-md ${getTechColor(tech.color || 'blue')}`}>
-                      {tech.name}
-                    </span>
-                  ))}
-                </div>
-              )}
+              <span
+                className="flex items-center gap-1"
+                style={{ color: '#a78bfa', fontFamily: "'JetBrains Mono', monospace" }}
+              >
+                <Calendar size={11} />
+                {period}
+              </span>
             </div>
           </div>
+
+          <ChevronDown
+            size={16}
+            color="#a78bfa"
+            className="mt-1 shrink-0 transition-transform duration-300"
+            style={{ transform: isOpen ? 'rotate(180deg)' : 'none' }}
+          />
         </div>
+
+        {/* Body */}
+        <AnimatePresence initial={false}>
+          {isOpen && (
+            <motion.div
+              className="overflow-hidden"
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: easePro }}
+            >
+              <div className="px-5 pb-5">
+                <div className="mb-4 h-px" style={{ background: 'rgba(139,92,246,0.12)' }} />
+
+                {exp.description && (
+                  <p className="mb-3 text-sm leading-relaxed" style={{ color: isDark ? 'rgba(232,224,255,0.6)' : '#8a7bb0' }}>
+                    {exp.description}
+                  </p>
+                )}
+
+                {exp.highlights && exp.highlights.length > 0 && (
+                  <ul className="space-y-2.5">
+                    {exp.highlights.map((h, i) => (
+                      <li
+                        key={i}
+                        className="flex items-start gap-3 text-sm"
+                        style={{ color: isDark ? 'rgba(232,224,255,0.6)' : '#8a7bb0' }}
+                      >
+                        <CheckCircle2 size={14} color="#7c3aed" className="mt-0.5 shrink-0" />
+                        {h.text}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+
+                {exp.technologies && exp.technologies.length > 0 && (
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {exp.technologies.map((tech, i) => (
+                      <span key={i} className={`text-[10px] px-2 py-0.5 rounded-md ${getTechColor(tech.color || 'blue')}`}>
+                        {tech.name}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </motion.div>
   )

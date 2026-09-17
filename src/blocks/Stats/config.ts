@@ -8,6 +8,15 @@ export const Stats: Block = {
   fields: [
     anchorIdField('stats'),
     {
+      name: 'codeLabel',
+      type: 'text',
+      label: 'Code Label',
+      defaultValue: '// 01 — stats',
+      admin: {
+        description: 'Badge mono affiché au-dessus du titre (ex: // 01 — stats)',
+      },
+    },
+    {
       name: 'title',
       type: 'text',
       label: 'Section Title',

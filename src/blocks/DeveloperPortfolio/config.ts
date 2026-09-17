@@ -133,10 +133,21 @@ export const DeveloperPortfolio: Block = {
       ],
     },
     {
+      name: 'showStats',
+      type: 'checkbox',
+      label: 'Afficher les statistiques (sous la code card)',
+      defaultValue: true,
+    },
+    {
       name: 'stats',
       type: 'array',
       label: 'Statistiques',
       maxRows: 4,
+      defaultValue: [
+        { value: '3+', label: 'Years of Experience' },
+        { value: '77', label: 'Payload Blocks' },
+        { value: '50+', label: 'React Components' },
+      ],
       fields: [
         {
           name: 'value',

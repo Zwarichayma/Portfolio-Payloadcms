@@ -51,6 +51,7 @@ const DeveloperPortfolioBlockComponent: React.FC<Props> = ({
   location,
   codeCard,
   stats,
+  showStats,
   animationStyle,
   showParticles,
   disableInnerContainer: _disableInnerContainer,
@@ -287,7 +288,7 @@ const DeveloperPortfolioBlockComponent: React.FC<Props> = ({
               )}
 
               {/* Stats row */}
-              {stats && stats.length > 0 && (
+              {showStats && stats && stats.length > 0 && (
                 <motion.div
                   className="grid grid-cols-3 gap-3"
                   variants={{ visible: { transition: { staggerChildren: 0.1 } } }}

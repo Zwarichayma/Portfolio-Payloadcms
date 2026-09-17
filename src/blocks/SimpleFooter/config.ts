@@ -73,7 +73,7 @@ export const SimpleFooter: Block = {
       name: 'copyright',
       type: 'text',
       label: 'Copyright',
-      defaultValue: '© 2026 All rights reserved.',
+      defaultValue: '© 2026 Chayma Zouari · Full-Stack Developer · Mahdia, Tunisia',
     },
   ],
 }

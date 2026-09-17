@@ -8,6 +8,15 @@ export const Testimonials: Block = {
   fields: [
     anchorIdField('testimonials'),
     {
+      name: 'codeLabel',
+      type: 'text',
+      label: 'Code Label',
+      defaultValue: '// 05 — testimonials',
+      admin: {
+        description: 'Badge mono affiché au-dessus du titre (ex: // 05 — testimonials)',
+      },
+    },
+    {
       name: 'title',
       type: 'text',
       required: true,

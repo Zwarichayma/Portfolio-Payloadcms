@@ -46,7 +46,7 @@ export const Experience: Block = {
           required: true,
           options: [
             { label: 'Work', value: 'work' },
-            { label: 'Education', value: 'education' },
+            { label: 'Internship', value: 'education' },
             { label: 'Freelance', value: 'freelance' },
             { label: 'Volunteer', value: 'volunteer' },
             { label: 'Certification', value: 'certification' },

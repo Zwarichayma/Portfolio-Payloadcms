@@ -835,6 +835,7 @@ export interface DeveloperPortfolioBlock {
       | null;
     footerText?: string | null;
   };
+  showStats?: boolean | null;
   stats?:
     | {
         value: string;
@@ -1129,6 +1130,10 @@ export interface TestimonialsBlock {
    * Unique ID for this section (anchor links, e.g. #services).
    */
   anchorId?: string | null;
+  /**
+   * Badge mono affiché au-dessus du titre (ex: // 05 — testimonials)
+   */
+  codeLabel?: string | null;
   title: string;
   subtitle?: string | null;
   description?: string | null;
@@ -1160,6 +1165,10 @@ export interface ContactFormBlock {
    * Unique ID for this section (anchor links, e.g. #services).
    */
   anchorId?: string | null;
+  /**
+   * Badge mono affiché au-dessus du titre (ex: // 07 — contact)
+   */
+  codeLabel?: string | null;
   title: string;
   subtitle?: string | null;
   description?: string | null;
@@ -1189,6 +1198,10 @@ export interface FormationBlock {
    * Unique ID for this section (anchor links, e.g. #services).
    */
   anchorId?: string | null;
+  /**
+   * Badge mono affiché au-dessus du titre (ex: // 06 — formation)
+   */
+  codeLabel?: string | null;
   title: string;
   subtitle?: string | null;
   description?: string | null;
@@ -1217,6 +1230,10 @@ export interface StatsBlock {
    * Unique ID for this section (anchor links, e.g. #services).
    */
   anchorId?: string | null;
+  /**
+   * Badge mono affiché au-dessus du titre (ex: // 01 — stats)
+   */
+  codeLabel?: string | null;
   title?: string | null;
   subtitle?: string | null;
   stats: {
@@ -1732,6 +1749,7 @@ export interface DeveloperPortfolioBlockSelect<T extends boolean = true> {
             };
         footerText?: T;
       };
+  showStats?: T;
   stats?:
     | T
     | {
@@ -1942,6 +1960,7 @@ export interface ProjectsBlockSelect<T extends boolean = true> {
  */
 export interface TestimonialsBlockSelect<T extends boolean = true> {
   anchorId?: T;
+  codeLabel?: T;
   title?: T;
   subtitle?: T;
   description?: T;
@@ -1971,6 +1990,7 @@ export interface TestimonialsBlockSelect<T extends boolean = true> {
  */
 export interface ContactFormBlockSelect<T extends boolean = true> {
   anchorId?: T;
+  codeLabel?: T;
   title?: T;
   subtitle?: T;
   description?: T;
@@ -1996,6 +2016,7 @@ export interface ContactFormBlockSelect<T extends boolean = true> {
  */
 export interface FormationBlockSelect<T extends boolean = true> {
   anchorId?: T;
+  codeLabel?: T;
   title?: T;
   subtitle?: T;
   description?: T;
@@ -2022,6 +2043,7 @@ export interface FormationBlockSelect<T extends boolean = true> {
  */
 export interface StatsBlockSelect<T extends boolean = true> {
   anchorId?: T;
+  codeLabel?: T;
   title?: T;
   subtitle?: T;
   stats?:
