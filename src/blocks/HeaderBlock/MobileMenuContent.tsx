@@ -4,7 +4,6 @@ import CustomText from '@/components/custom/custom-text'
 import { CustomButton } from '@/components/custom/CustomButton'
 import { CustomLink } from '@/components/custom/CustomLink'
 import { Media } from '@/components/Media'
-import { ThemeToggle } from '@/components/ui/ThemeToggle'
 import type { Header as HeaderType } from '@/payload-types'
 import { Link } from '@/types/link'
 import { cn } from '@/utilities/ui'
@@ -83,7 +82,7 @@ export const MobileMenuContent: React.FC<MobileMenuContentProps> = ({
         style={{ boxShadow: styles.shadowColor }}
       />
       <div 
-        className="container p-24"
+        className="container px-6 py-8"
       >
         {menuItems.map((menuData) => {
           if (!menuData) return null
@@ -104,7 +103,7 @@ export const MobileMenuContent: React.FC<MobileMenuContentProps> = ({
                   linkType={linkType || 'custom'}
                   newTab={(menuData as Link)?.newTab || false}
                   onClick={onClose}
-                  className="w-full flex items-center justify-between py-24"
+                  className="w-full flex items-center justify-between py-5 px-3 -mx-3 rounded-xl transition-colors duration-200 hover:bg-gray-50 dark:hover:bg-gray-700"
                 >
                   <CustomText
                     variant="h6"
@@ -122,7 +121,7 @@ export const MobileMenuContent: React.FC<MobileMenuContentProps> = ({
                 <>
                   <button
                     onClick={() => toggleMenu(index)}
-                    className="w-full flex items-center justify-between py-24"
+                    className="w-full flex items-center justify-between py-5 px-3 -mx-3 rounded-xl transition-colors duration-200 hover:bg-gray-50 dark:hover:bg-gray-700"
                   >
                     <CustomText
                       variant="h6"
@@ -136,17 +135,19 @@ export const MobileMenuContent: React.FC<MobileMenuContentProps> = ({
                       {title}
                     </CustomText>
                     {hasItems && (
-                      <Image
-                        src="/arrow-down.svg"
-                        alt="arrow down"
-                        width={14}
-                        height={8}
-                        className={cn(
-                          'flex-none transition-transform duration-300',
-                          openMenuIndex === index ? 'transform rotate-180' : '',
-                        )}
-                        priority
-                      />
+                      <span className="flex h-[26px] w-[26px] flex-none items-center justify-center rounded-full bg-gray-100 transition-colors duration-300 dark:bg-gray-700">
+                        <Image
+                          src="/arrow-down.svg"
+                          alt="arrow down"
+                          width={14}
+                          height={8}
+                          className={cn(
+                            'transition-transform duration-300 dark:invert',
+                            openMenuIndex === index ? 'transform rotate-180' : '',
+                          )}
+                          priority
+                        />
+                      </span>
                     )}
                   </button>
 
@@ -271,13 +272,6 @@ export const MobileMenuContent: React.FC<MobileMenuContentProps> = ({
               </div>
             )}
 
-          {/* Theme Toggle Button */}
-          <div 
-            className="pt-4 border-t"
-            style={{ borderTopColor: styles.borderColor }}
-          >
-            <ThemeToggle variant="mobile" />
-          </div>
         </div>
       </div>
     </>

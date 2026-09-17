@@ -1,7 +1,6 @@
 'use server'
 import { CustomButton } from '@/components/custom/CustomButton'
 import { CustomLink } from '@/components/custom/CustomLink'
-import { ThemeToggle } from '@/components/ui/ThemeToggle'
 import type { Page } from '@/payload-types'
 import { Link } from '@/types/link'
 import Image from 'next/image'
@@ -42,15 +41,7 @@ export const HeaderBlock: React.FC<HeaderBlockProps> = async (props) => {
     ctaButtonToUse.label.trim() !== ''
 
   const shouldShowMobileMenu = hasValidMenus || hasValidCtaButton
-  const shouldShowHeader =
-    !!logoToUse ||
-    hasValidMenus ||
-    hasValidCtaButton ||
-    shouldShowMobileMenu
 
-  if (!shouldShowHeader) {
-    return null
-  }
   return (
     <>
       <section>
@@ -107,9 +98,6 @@ export const HeaderBlock: React.FC<HeaderBlockProps> = async (props) => {
 
             {/* Actions Desktop & Mobile */}
             <div className="flex items-center gap-4 ml-auto lg:ml-0">
-              {/* Theme Toggle Button */}
-              <ThemeToggle className="flex-shrink-0" />
-
               {/* CTA Button Desktop - Server Component */}
               {hasValidCtaButton && (
                 <div className="hidden lg:block">

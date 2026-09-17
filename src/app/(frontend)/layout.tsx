@@ -6,6 +6,7 @@ import { GeistSans } from 'geist/font/sans'
 import React from 'react'
 
 import { Providers } from '@/providers'
+import { ThemeToggle } from '@/components/ui/ThemeToggle'
 import { InitTheme } from '@/providers/Theme/InitTheme'
 import { defaultTheme, themeCookieKey, themeIsValid } from '@/providers/Theme/ThemeSelector/types'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
@@ -35,6 +36,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body>
         <Providers initialTheme={initialTheme}>
           {children}
+
+          {/* Floating dark mode toggle (sticky bottom) */}
+          <div className="fixed bottom-6 right-6 z-[60]">
+            <ThemeToggle />
+          </div>
         </Providers>
       </body>
     </html>
