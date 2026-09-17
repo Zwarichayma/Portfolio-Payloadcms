@@ -1012,7 +1012,7 @@ export interface ExperienceBlock {
   subtitle?: string | null;
   description?: string | null;
   experiences: {
-    type: 'work' | 'education' | 'freelance' | 'volunteer' | 'certification';
+    type: 'work' | 'internship' | 'freelance' | 'volunteer' | 'certification';
     title: string;
     organization: string;
     location?: string | null;
