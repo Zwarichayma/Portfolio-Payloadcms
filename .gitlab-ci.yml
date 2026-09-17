@@ -1,0 +1,40 @@
+# Pipeline GitLab CI — lint + build check (Method 1)
+# Vérifie que le code (Next.js + Payload CMS) compile à chaque push.
+image: node:20-alpine
+
+stages:
+  - test
+  - build
+
+default:
+  before_script:
+    # Requis pour les binaires natifs (ex: sharp) sur Alpine
+    - apk add --no-cache libc6-compat
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - .next/cache/
+      - node_modules/
+
+install_dependencies:
+  stage: test
+  script:
+    - npm ci
+    - npm run lint --if-present
+
+build_project:
+  stage: build
+  services:
+    # Base Mongo éphémère pour que le build (generateStaticParams) fonctionne
+    - name: mongo:7
+      alias: mongo
+  variables:
+    DATABASE_URL: "mongodb://mongo:27017/ci-dummy"
+    PAYLOAD_SECRET: "ci-secret-build-key"
+    SERVER_URL: "http://localhost:3000"
+    NODE_OPTIONS: "--max-old-space-size=4096"
+  script:
+    - npm ci
+    - npm run build
