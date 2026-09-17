@@ -5,6 +5,7 @@ declare global {
       DATABASE_URL: string
       SERVER_URL: string
       VERCEL_PROJECT_PRODUCTION_URL: string
+      BLOB_READ_WRITE_TOKEN: string
     }
   }
 }

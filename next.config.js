@@ -23,14 +23,18 @@ const nextConfig = {
   outputFileTracingRoot: __dirname,
   poweredByHeader: false,
   images: {
-    remotePatterns: [SERVER_URL].map((item) => {
-      const url = new URL(item)
+    remotePatterns: [
+      ...[SERVER_URL].map((item) => {
+        const url = new URL(item)
 
-      return {
-        hostname: url.hostname,
-        protocol: url.protocol.replace(':', ''),
-      }
-    }),
+        return {
+          hostname: url.hostname,
+          protocol: url.protocol.replace(':', ''),
+        }
+      }),
+      // Vercel Blob storage (media uploads in production)
+      { protocol: 'https', hostname: '*.public.blob.vercel-storage.com' },
+    ],
   },
   webpack: (webpackConfig) => {
     webpackConfig.resolve.extensionAlias = {
