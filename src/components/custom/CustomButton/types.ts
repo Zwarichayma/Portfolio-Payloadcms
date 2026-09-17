@@ -9,14 +9,14 @@ export interface BaseButtonProps extends React.ButtonHTMLAttributes<HTMLButtonEl
   className?: string
 }
 
-export interface PrimaryButtonProps extends BaseButtonProps {}
+export type PrimaryButtonProps = BaseButtonProps
 
-export interface SecondaryButtonProps extends BaseButtonProps {}
+export type SecondaryButtonProps = BaseButtonProps
 
-export interface OutlineButtonProps extends BaseButtonProps {}
+export type OutlineButtonProps = BaseButtonProps
 
-export interface OutlineAnimatedButtonProps extends BaseButtonProps {}
+export type OutlineAnimatedButtonProps = BaseButtonProps
 
-export interface TextOnlyButtonProps extends BaseButtonProps {}
+export type TextOnlyButtonProps = BaseButtonProps
 
-export interface SecondaryFilledButtonProps extends BaseButtonProps {}
+export type SecondaryFilledButtonProps = BaseButtonProps

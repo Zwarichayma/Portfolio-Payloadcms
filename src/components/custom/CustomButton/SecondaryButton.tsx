@@ -1,4 +1,5 @@
 import * as React from 'react'
+import Image from 'next/image'
 import { motion, AnimatePresence, Variants } from 'motion/react'
 import { SecondaryButtonProps } from './types'
 import { cn } from '@/utilities/ui'
@@ -16,10 +17,8 @@ const SecondaryButton = React.forwardRef<HTMLButtonElement, SecondaryButtonProps
     },
     ref,
   ) => {
-    const [hasBeenHovered, setHasBeenHovered] = React.useState(false)
     const [isHovering, setIsHovering] = React.useState(false)
     const [showShineReverse, setShowShineReverse] = React.useState(false)
-    const [isArrowFadingOut, setIsArrowFadingOut] = React.useState(false)
 
     // Classes communes pour secondary avec ou sans animation
     const secondaryBaseClasses =
@@ -97,7 +96,13 @@ const SecondaryButton = React.forwardRef<HTMLButtonElement, SecondaryButtonProps
     const isExpandAnimation = animated && animationStyle === 'expand'
 
     // Séparer les props motion des props HTML pour éviter les conflits de types
-    const { onAnimationStart, onDrag, onDragStart, onDragEnd, ...buttonProps } = props
+    const {
+      onAnimationStart: _onAnimationStart,
+      onDrag: _onDrag,
+      onDragStart: _onDragStart,
+      onDragEnd: _onDragEnd,
+      ...buttonProps
+    } = props
 
     return (
       <motion.button
@@ -109,18 +114,14 @@ const SecondaryButton = React.forwardRef<HTMLButtonElement, SecondaryButtonProps
         whileTap="tap"
         onMouseEnter={() => {
           setIsHovering(true)
-          setHasBeenHovered(true)
           setShowShineReverse(false)
         }}
         onMouseLeave={() => {
           setIsHovering(false)
           setShowShineReverse(true)
-          setIsArrowFadingOut(true)
 
           // Reset everything after the animation completes (500ms)
           setTimeout(() => {
-            setIsArrowFadingOut(false)
-            setHasBeenHovered(false)
             setShowShineReverse(false)
           }, ANIMATION_DURATION * 1000) // Convert duration to milliseconds
         }}
@@ -232,7 +233,7 @@ const SecondaryButton = React.forwardRef<HTMLButtonElement, SecondaryButtonProps
 
         {/* Flèches pour les boutons sans animation */}
         {showArrow && arrowPosition === 'left' && !isAnimated && (
-          <img
+          <Image
             src="/arrow-black.svg"
             width={24}
             height={8}
@@ -242,7 +243,13 @@ const SecondaryButton = React.forwardRef<HTMLButtonElement, SecondaryButtonProps
         )}
 
         {showArrow && arrowPosition === 'right' && !isAnimated && (
-          <img src="/arrow-black.svg" width={24} height={8} alt="Arrow right" className="ml-3 " />
+          <Image
+            src="/arrow-black.svg"
+            width={24}
+            height={8}
+            alt="Arrow right"
+            className="ml-3"
+          />
         )}
       </motion.button>
     )

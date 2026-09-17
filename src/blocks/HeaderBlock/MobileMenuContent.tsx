@@ -261,7 +261,7 @@ export const MobileMenuContent: React.FC<MobileMenuContentProps> = ({
                   href={ctaButton.buttonLink?.url}
                   reference={ctaButton.buttonLink?.reference}
                   linkType={ctaButton.buttonLink?.type || 'custom'}
-                  newTab={(ctaButton.buttonLink as any)?.newTab || false}
+                  newTab={ctaButton.buttonLink?.newTab || false}
                   onClick={onClose}
                 >
                   <CustomButton variant="primary" className="w-full!">

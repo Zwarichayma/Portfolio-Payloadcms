@@ -107,11 +107,9 @@ export interface Config {
   fallbackLocale: null;
   globals: {
     header: Header;
-    footer: Footer;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
-    footer: FooterSelect<false> | FooterSelect<true>;
   };
   locale: null;
   user: User & {
@@ -214,6 +212,7 @@ export interface Page {
     | ContactFormBlock
     | FormationBlock
     | StatsBlock
+    | SimpleFooterBlock
   )[];
   meta?: {
     title?: string | null;
@@ -431,6 +430,10 @@ export interface User {
  * via the `definition` "CallToActionBlock".
  */
 export interface CallToActionBlock {
+  /**
+   * Unique ID for this section (anchor links, e.g. #services).
+   */
+  anchorId?: string | null;
   richText?: {
     root: {
       type: string;
@@ -482,6 +485,10 @@ export interface CallToActionBlock {
  * via the `definition` "ContentBlock".
  */
 export interface ContentBlock {
+  /**
+   * Unique ID for this section (anchor links, e.g. #services).
+   */
+  anchorId?: string | null;
   columns?:
     | {
         size?: ('oneThird' | 'half' | 'twoThirds' | 'full') | null;
@@ -535,6 +542,10 @@ export interface ContentBlock {
  * via the `definition` "MediaBlock".
  */
 export interface MediaBlock {
+  /**
+   * Unique ID for this section (anchor links, e.g. #services).
+   */
+  anchorId?: string | null;
   media: string | Media;
   id?: string | null;
   blockName?: string | null;
@@ -545,6 +556,10 @@ export interface MediaBlock {
  * via the `definition` "ArchiveBlock".
  */
 export interface ArchiveBlock {
+  /**
+   * Unique ID for this section (anchor links, e.g. #services).
+   */
+  anchorId?: string | null;
   introContent?: {
     root: {
       type: string;
@@ -579,6 +594,10 @@ export interface ArchiveBlock {
  * via the `definition` "FormBlock".
  */
 export interface FormBlock {
+  /**
+   * Unique ID for this section (anchor links, e.g. #services).
+   */
+  anchorId?: string | null;
   form: string | Form;
   enableIntro?: boolean | null;
   introContent?: {
@@ -779,6 +798,10 @@ export interface Form {
  * via the `definition` "DeveloperPortfolioBlock".
  */
 export interface DeveloperPortfolioBlock {
+  /**
+   * Unique ID for this section (anchor links, e.g. #services).
+   */
+  anchorId?: string | null;
   name: string;
   title?: string | null;
   description?: string | null;
@@ -798,6 +821,9 @@ export interface DeveloperPortfolioBlock {
   location?: string | null;
   codeCard?: {
     title?: string | null;
+    /**
+     * Laisser vide pour utiliser automatiquement le Job Title (ex: 'Full Stack Developer' → fullStackDeveloper).
+     */
     variableName?: string | null;
     lines?:
       | {
@@ -940,6 +966,10 @@ export interface HeaderBlockProps {
  * via the `definition` "SkillsBlock".
  */
 export interface SkillsBlock {
+  /**
+   * Unique ID for this section (anchor links, e.g. #services).
+   */
+  anchorId?: string | null;
   title: string;
   /**
    * Badge mono affiché au-dessus du titre (ex: // 04 — skills)
@@ -969,6 +999,10 @@ export interface SkillsBlock {
  * via the `definition` "ExperienceBlock".
  */
 export interface ExperienceBlock {
+  /**
+   * Unique ID for this section (anchor links, e.g. #services).
+   */
+  anchorId?: string | null;
   title: string;
   /**
    * Badge mono affiché au-dessus du titre (ex: // 02 — experience)
@@ -1015,6 +1049,10 @@ export interface ExperienceBlock {
  * via the `definition` "ProjectsBlock".
  */
 export interface ProjectsBlock {
+  /**
+   * Unique ID for this section (anchor links, e.g. #services).
+   */
+  anchorId?: string | null;
   title: string;
   /**
    * Badge mono affiché au-dessus du titre (ex: // 03 — projets)
@@ -1087,6 +1125,10 @@ export interface ProjectsBlock {
  * via the `definition` "TestimonialsBlock".
  */
 export interface TestimonialsBlock {
+  /**
+   * Unique ID for this section (anchor links, e.g. #services).
+   */
+  anchorId?: string | null;
   title: string;
   subtitle?: string | null;
   description?: string | null;
@@ -1114,6 +1156,10 @@ export interface TestimonialsBlock {
  * via the `definition` "ContactFormBlock".
  */
 export interface ContactFormBlock {
+  /**
+   * Unique ID for this section (anchor links, e.g. #services).
+   */
+  anchorId?: string | null;
   title: string;
   subtitle?: string | null;
   description?: string | null;
@@ -1139,6 +1185,10 @@ export interface ContactFormBlock {
  * via the `definition` "FormationBlock".
  */
 export interface FormationBlock {
+  /**
+   * Unique ID for this section (anchor links, e.g. #services).
+   */
+  anchorId?: string | null;
   title: string;
   subtitle?: string | null;
   description?: string | null;
@@ -1163,6 +1213,10 @@ export interface FormationBlock {
  * via the `definition` "StatsBlock".
  */
 export interface StatsBlock {
+  /**
+   * Unique ID for this section (anchor links, e.g. #services).
+   */
+  anchorId?: string | null;
   title?: string | null;
   subtitle?: string | null;
   stats: {
@@ -1176,6 +1230,36 @@ export interface StatsBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'stats';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SimpleFooterBlock".
+ */
+export interface SimpleFooterBlock {
+  /**
+   * Unique ID for this section (anchor links, e.g. #services).
+   */
+  anchorId?: string | null;
+  title?: string | null;
+  tagline?: string | null;
+  socialLinks?:
+    | {
+        platform?: ('github' | 'linkedin' | 'twitter' | 'portfolio' | 'email') | null;
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  links?:
+    | {
+        label: string;
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  copyright?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'simpleFooter';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1508,6 +1592,7 @@ export interface PagesSelect<T extends boolean = true> {
         contactForm?: T | ContactFormBlockSelect<T>;
         formation?: T | FormationBlockSelect<T>;
         stats?: T | StatsBlockSelect<T>;
+        simpleFooter?: T | SimpleFooterBlockSelect<T>;
       };
   meta?:
     | T
@@ -1528,6 +1613,7 @@ export interface PagesSelect<T extends boolean = true> {
  * via the `definition` "CallToActionBlock_select".
  */
 export interface CallToActionBlockSelect<T extends boolean = true> {
+  anchorId?: T;
   richText?: T;
   links?:
     | T
@@ -1552,6 +1638,7 @@ export interface CallToActionBlockSelect<T extends boolean = true> {
  * via the `definition` "ContentBlock_select".
  */
 export interface ContentBlockSelect<T extends boolean = true> {
+  anchorId?: T;
   columns?:
     | T
     | {
@@ -1578,6 +1665,7 @@ export interface ContentBlockSelect<T extends boolean = true> {
  * via the `definition` "MediaBlock_select".
  */
 export interface MediaBlockSelect<T extends boolean = true> {
+  anchorId?: T;
   media?: T;
   id?: T;
   blockName?: T;
@@ -1587,6 +1675,7 @@ export interface MediaBlockSelect<T extends boolean = true> {
  * via the `definition` "ArchiveBlock_select".
  */
 export interface ArchiveBlockSelect<T extends boolean = true> {
+  anchorId?: T;
   introContent?: T;
   populateBy?: T;
   relationTo?: T;
@@ -1601,6 +1690,7 @@ export interface ArchiveBlockSelect<T extends boolean = true> {
  * via the `definition` "FormBlock_select".
  */
 export interface FormBlockSelect<T extends boolean = true> {
+  anchorId?: T;
   form?: T;
   enableIntro?: T;
   introContent?: T;
@@ -1612,6 +1702,7 @@ export interface FormBlockSelect<T extends boolean = true> {
  * via the `definition` "DeveloperPortfolioBlock_select".
  */
 export interface DeveloperPortfolioBlockSelect<T extends boolean = true> {
+  anchorId?: T;
   name?: T;
   title?: T;
   description?: T;
@@ -1721,6 +1812,7 @@ export interface HeaderBlockPropsSelect<T extends boolean = true> {
  * via the `definition` "SkillsBlock_select".
  */
 export interface SkillsBlockSelect<T extends boolean = true> {
+  anchorId?: T;
   title?: T;
   codeLabel?: T;
   subtitle?: T;
@@ -1748,6 +1840,7 @@ export interface SkillsBlockSelect<T extends boolean = true> {
  * via the `definition` "ExperienceBlock_select".
  */
 export interface ExperienceBlockSelect<T extends boolean = true> {
+  anchorId?: T;
   title?: T;
   codeLabel?: T;
   subtitle?: T;
@@ -1792,6 +1885,7 @@ export interface ExperienceBlockSelect<T extends boolean = true> {
  * via the `definition` "ProjectsBlock_select".
  */
 export interface ProjectsBlockSelect<T extends boolean = true> {
+  anchorId?: T;
   title?: T;
   codeLabel?: T;
   subtitle?: T;
@@ -1847,6 +1941,7 @@ export interface ProjectsBlockSelect<T extends boolean = true> {
  * via the `definition` "TestimonialsBlock_select".
  */
 export interface TestimonialsBlockSelect<T extends boolean = true> {
+  anchorId?: T;
   title?: T;
   subtitle?: T;
   description?: T;
@@ -1875,6 +1970,7 @@ export interface TestimonialsBlockSelect<T extends boolean = true> {
  * via the `definition` "ContactFormBlock_select".
  */
 export interface ContactFormBlockSelect<T extends boolean = true> {
+  anchorId?: T;
   title?: T;
   subtitle?: T;
   description?: T;
@@ -1899,6 +1995,7 @@ export interface ContactFormBlockSelect<T extends boolean = true> {
  * via the `definition` "FormationBlock_select".
  */
 export interface FormationBlockSelect<T extends boolean = true> {
+  anchorId?: T;
   title?: T;
   subtitle?: T;
   description?: T;
@@ -1924,6 +2021,7 @@ export interface FormationBlockSelect<T extends boolean = true> {
  * via the `definition` "StatsBlock_select".
  */
 export interface StatsBlockSelect<T extends boolean = true> {
+  anchorId?: T;
   title?: T;
   subtitle?: T;
   stats?:
@@ -1936,6 +2034,32 @@ export interface StatsBlockSelect<T extends boolean = true> {
   columns?: T;
   showParticles?: T;
   backgroundImage?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SimpleFooterBlock_select".
+ */
+export interface SimpleFooterBlockSelect<T extends boolean = true> {
+  anchorId?: T;
+  title?: T;
+  tagline?: T;
+  socialLinks?:
+    | T
+    | {
+        platform?: T;
+        url?: T;
+        id?: T;
+      };
+  links?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+        id?: T;
+      };
+  copyright?: T;
   id?: T;
   blockName?: T;
 }
@@ -2493,38 +2617,6 @@ export interface Header {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "footer".
- */
-export interface Footer {
-  id: string;
-  navItems?:
-    | {
-        link?: {
-          type?: ('reference' | 'custom') | null;
-          reference?:
-            | ({
-                relationTo: 'pages';
-                value: string | Page;
-              } | null)
-            | ({
-                relationTo: 'posts';
-                value: string | Post;
-              } | null);
-          url?: string | null;
-          label?: string | null;
-          /**
-           * Check to open link in a new tab/window
-           */
-          newTab?: boolean | null;
-        };
-        id?: string | null;
-      }[]
-    | null;
-  updatedAt?: string | null;
-  createdAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "header_select".
  */
 export interface HeaderSelect<T extends boolean = true> {
@@ -2584,29 +2676,6 @@ export interface HeaderSelect<T extends boolean = true> {
       };
   createdBy?: T;
   updatedBy?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "footer_select".
- */
-export interface FooterSelect<T extends boolean = true> {
-  navItems?:
-    | T
-    | {
-        link?:
-          | T
-          | {
-              type?: T;
-              reference?: T;
-              url?: T;
-              label?: T;
-              newTab?: T;
-            };
-        id?: T;
-      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

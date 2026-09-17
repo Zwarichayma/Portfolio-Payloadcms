@@ -6,6 +6,7 @@ import type { FormationBlock as FormationBlockType } from '@/payload-types'
 import { Media } from '@/components/Media'
 import { useTheme } from '@/providers/Theme'
 import { Particles } from '@/components/custom/Particles'
+import { LiquidEtherBackground } from '@/components/custom/LiquidEtherBackground'
 
 type Props = {
   disableInnerContainer?: boolean
@@ -118,7 +119,7 @@ const FormationBlockComponent: React.FC<Props> = ({
           {(items || []).map((item, index) => (
             <motion.div key={index} variants={getCardVariants()}>
               <div
-                className="group relative overflow-hidden rounded-2xl p-5 h-full transition-all duration-300"
+                className="group relative isolate overflow-hidden rounded-2xl p-5 h-full transition-all duration-300"
                 style={{
                   backgroundColor: isDark ? 'rgba(23,20,42,0.6)' : 'rgba(255,255,255,0.7)',
                   border: `1px solid ${isDark ? 'rgba(139,92,246,0.15)' : 'rgba(139,92,246,0.2)'}`,
@@ -135,6 +136,8 @@ const FormationBlockComponent: React.FC<Props> = ({
                   el.style.boxShadow = 'none'
                 }}
               >
+                <LiquidEtherBackground />
+
                 <div className="flex items-start gap-3">
                   <div
                     className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"

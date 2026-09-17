@@ -6,10 +6,13 @@ import type { ExperienceBlock as ExperienceBlockType } from '@/payload-types'
 import { Media } from '@/components/Media'
 import { useTheme } from '@/providers/Theme'
 import { Particles } from '@/components/custom/Particles'
+import { LiquidEtherBackground } from '@/components/custom/LiquidEtherBackground'
 
 type Props = {
   disableInnerContainer?: boolean
 } & ExperienceBlockType
+
+type Experience = NonNullable<ExperienceBlockType['experiences']>[0]
 
 const easePro = [0.19, 1, 0.22, 1] as const
 
@@ -219,7 +222,7 @@ const ExperienceBlockComponent: React.FC<Props> = ({
 }
 
 const ExperienceCard: React.FC<{
-  exp: any
+  exp: Experience
   index: number
   isDark: boolean
   getTypeIcon: (type: string) => React.ReactNode
@@ -249,10 +252,10 @@ const ExperienceCard: React.FC<{
     >
       <div
         ref={cardRef}
-        className="group relative overflow-hidden rounded-2xl will-change-transform"
+        className="group relative isolate overflow-hidden rounded-2xl will-change-transform"
         style={{
           backgroundColor: isDark ? 'rgba(23,20,42,0.6)' : 'rgba(255,255,255,0.7)',
-          borderColor: isDark ? 'rgba(139,92,246,0.15)' : 'rgba(139,92,246,0.2)',
+          border: `1px solid ${isDark ? 'rgba(139,92,246,0.15)' : 'rgba(139,92,246,0.2)'}`,
           backdropFilter: 'blur(12px)',
           WebkitBackdropFilter: 'blur(12px)',
           boxShadow: isDark
@@ -276,6 +279,8 @@ const ExperienceCard: React.FC<{
           el.style.transform = 'translateY(0)'
         }}
       >
+        <LiquidEtherBackground />
+
         <div
           className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 rounded-2xl"
           style={{
@@ -339,7 +344,7 @@ const ExperienceCard: React.FC<{
 
               {exp.highlights && exp.highlights.length > 0 && (
                 <ul className="space-y-1 mb-2">
-                  {exp.highlights.map((h: any, i: number) => (
+                  {exp.highlights.map((h, i) => (
                     <li key={i} className="flex items-start gap-2 text-[13px]" style={{ color: isDark ? 'rgba(232,224,255,0.55)' : '#8a7bb0' }}>
                       <span className="mt-1.5 w-1 h-1 rounded-full flex-shrink-0" style={{ backgroundColor: isDark ? 'rgba(139,92,246,0.5)' : '#a78bfa' }} />
                       {h.text}
@@ -350,7 +355,7 @@ const ExperienceCard: React.FC<{
 
               {exp.technologies && exp.technologies.length > 0 && (
                 <div className="flex flex-wrap gap-1">
-                  {exp.technologies.map((tech: any, i: number) => (
+                  {exp.technologies.map((tech, i) => (
                     <span key={i} className={`text-[10px] px-2 py-0.5 rounded-md ${getTechColor(tech.color || 'blue')}`}>
                       {tech.name}
                     </span>

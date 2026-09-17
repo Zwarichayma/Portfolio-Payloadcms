@@ -13,7 +13,7 @@ interface ProgressBarProps {
   gradientColor: string
 }
 
-export const ProgressBar: React.FC<ProgressBarProps> = ({ skill, gradientColor }) => {
+export const ProgressBar: React.FC<ProgressBarProps> = ({ skill }) => {
   const { theme } = useTheme()
   const isDark = theme === 'dark'
   const [mousePos, setMousePos] = useState({ x: 50, y: 50 })

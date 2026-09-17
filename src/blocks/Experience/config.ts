@@ -1,9 +1,12 @@
+import { anchorIdField } from '@/fields/anchorIdField'
+
 import type { Block } from 'payload'
 
 export const Experience: Block = {
   slug: 'experience',
   interfaceName: 'ExperienceBlock',
   fields: [
+    anchorIdField('experience'),
     {
       name: 'title',
       type: 'text',

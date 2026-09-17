@@ -6,10 +6,13 @@ import type { TestimonialsBlock as TestimonialsBlockType } from '@/payload-types
 import { Media } from '@/components/Media'
 import { useTheme } from '@/providers/Theme'
 import { Particles } from '@/components/custom/Particles'
+import { LiquidEtherBackground } from '@/components/custom/LiquidEtherBackground'
 
 type Props = {
   disableInnerContainer?: boolean
 } & TestimonialsBlockType
+
+type Testimonial = NonNullable<TestimonialsBlockType['testimonials']>[0]
 
 const easeFluid = [0.16, 1, 0.3, 1] as const
 
@@ -224,7 +227,7 @@ const TestimonialsBlockComponent: React.FC<Props> = ({
             whileInView="visible"
             viewport={{ once: true, margin: '-50px' }}
           >
-            {(displayStyle === 'single' ? (featured.length > 0 ? [featured[0]] : testimonials?.slice(0, 1)) : testimonials)?.map((testimonial: any, index: number) => (
+            {(displayStyle === 'single' ? (featured.length > 0 ? [featured[0]] : testimonials?.slice(0, 1)) : testimonials)?.map((testimonial, index) => (
               <motion.div key={index} variants={getCardVariants()}>
                 <TestimonialCard testimonial={testimonial} renderStars={renderStars} isDark={isDark} />
               </motion.div>
@@ -237,12 +240,12 @@ const TestimonialsBlockComponent: React.FC<Props> = ({
 }
 
 const TestimonialCard: React.FC<{
-  testimonial: any
+  testimonial: Testimonial
   renderStars: (rating: number) => React.ReactNode
   isDark: boolean
 }> = ({ testimonial, renderStars, isDark }) => (
   <div
-    className="relative overflow-hidden rounded-2xl border p-6 h-full"
+    className="relative isolate overflow-hidden rounded-2xl border p-6 h-full"
     style={{
       backgroundColor: isDark ? 'rgba(23,20,42,0.7)' : '#ffffff',
       borderColor: isDark ? 'rgba(139,92,246,0.15)' : 'rgba(139,92,246,0.2)',
@@ -266,6 +269,8 @@ const TestimonialCard: React.FC<{
       el.style.transform = 'translateY(0)'
     }}
   >
+    <LiquidEtherBackground />
+
     <div className="flex gap-0.5 mb-4">{renderStars(testimonial.rating || 5)}</div>
 
     <blockquote

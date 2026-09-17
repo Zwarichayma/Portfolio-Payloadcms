@@ -26,7 +26,6 @@ export const HeaderBlock: React.FC<HeaderBlockProps> = async (props) => {
     logoLink,
     customMenus,
     ctaButton,
-    anchorId,
   } = props
   const globalHeader = await getGlobalHeader()
 
@@ -54,7 +53,7 @@ export const HeaderBlock: React.FC<HeaderBlockProps> = async (props) => {
   }
   return (
     <>
-      <section id={anchorId || undefined}>
+      <section>
         <HeaderWrapper>
           <header className="container lg:[--has-sidebar:1] lg:w-full lg:px-24 md:px-40 py-16 flex items-center justify-between h-full">
             {/* Logo et Navigation */}
@@ -118,7 +117,7 @@ export const HeaderBlock: React.FC<HeaderBlockProps> = async (props) => {
                     href={ctaButtonToUse.buttonLink?.url}
                     reference={ctaButtonToUse.buttonLink?.reference}
                     linkType={ctaButtonToUse.buttonLink?.type || 'custom'}
-                    newTab={(ctaButtonToUse.buttonLink as any)?.newTab || false}
+                    newTab={ctaButtonToUse.buttonLink?.newTab || false}
                   >
                     <CustomButton variant="primary" className="">
                       {ctaButtonToUse.label}

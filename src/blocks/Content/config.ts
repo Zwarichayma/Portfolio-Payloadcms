@@ -1,3 +1,5 @@
+import { anchorIdField } from '@/fields/anchorIdField'
+
 import type { Block, Field } from 'payload'
 
 import {
@@ -67,6 +69,7 @@ export const Content: Block = {
   slug: 'content',
   interfaceName: 'ContentBlock',
   fields: [
+    anchorIdField('content'),
     {
       name: 'columns',
       type: 'array',

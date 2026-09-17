@@ -1,3 +1,5 @@
+import type { Field } from 'payload'
+
 import {
   AlignFeature,
   BlockquoteFeature,
@@ -44,9 +46,9 @@ export const createRichTextField = ({
 }: {
   name: string
   label: string
-  required: boolean
-  additionalProps: any
-}) => {
+  required?: boolean
+  additionalProps?: Record<string, unknown>
+}): Field => {
   return {
     name,
     label,

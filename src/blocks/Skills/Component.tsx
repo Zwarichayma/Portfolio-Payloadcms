@@ -9,7 +9,6 @@ import { SkillCard } from './components/SkillCard'
 import { ProgressBar } from './components/ProgressBar'
 import { CircularProgress } from './components/CircularProgress'
 import { ParticleBackground } from './components/ParticleBackground'
-import CardSwap, { Card } from './components/CardSwap'
 
 type Props = {
   disableInnerContainer?: boolean
@@ -185,41 +184,19 @@ const SkillsBlockComponent: React.FC<Props> = ({
           </motion.div>
         )}
 
-        {/* CardSwap Display Style */}
+        {/* Scroll Carousel Display Style */}
         {skills && skills.length > 0 && displayStyle === 'cardSwap' && (
           <motion.div
-            className="h-96 relative max-w-lg mx-auto"
+            className="relative max-w-5xl mx-auto"
             variants={getAnimationVariants()}
-            style={{
-              filter: 'drop-shadow(0 25px 50px rgba(0, 0, 0, 0.15))',
-            }}
           >
-            <CardSwap
-              cardDistance={70}
-              verticalDistance={50}
-              delay={5000}
-              pauseOnHover={true}
-              className="h-full"
-            >
+            <div className="flex gap-6 overflow-x-auto pb-4 px-1 snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {skills.map((skill, index) => (
-                <Card key={index}>
-                  <motion.div 
-                    className="h-full flex items-center justify-center p-4"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: index * 0.1 }}
-                  >
-                    <SkillCard 
-                      skill={skill} 
-                      gradientColor={getCategoryColor(skill.category || 'other')}
-                    />
-                  </motion.div>
-                </Card>
+                <div key={index} className="snap-start">
+                  <SkillCard skill={skill} variant="landscape" />
+                </div>
               ))}
-            </CardSwap>
-            
-            {/* Ambient glow effect */}
-            <div className="absolute inset-0 -z-10 bg-linear-to-r from-[#7c3aed]/10 via-[#a78bfa]/10 to-[#7c3aed]/5 blur-3xl rounded-full" />
+            </div>
           </motion.div>
         )}
 

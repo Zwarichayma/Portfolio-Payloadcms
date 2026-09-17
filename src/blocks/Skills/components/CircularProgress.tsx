@@ -13,7 +13,7 @@ interface CircularProgressProps {
   gradientColor: string
 }
 
-export const CircularProgress: React.FC<CircularProgressProps> = ({ skill, gradientColor }) => {
+export const CircularProgress: React.FC<CircularProgressProps> = ({ skill }) => {
   const { theme } = useTheme()
   const isDark = theme === 'dark'
   const [progress, setProgress] = useState(0)

@@ -1,9 +1,12 @@
+import { anchorIdField } from '@/fields/anchorIdField'
+
 import type { Block } from 'payload'
 
 export const ContactForm: Block = {
   slug: 'contactForm',
   interfaceName: 'ContactFormBlock',
   fields: [
+    anchorIdField('contactForm'),
     {
       name: 'title',
       type: 'text',

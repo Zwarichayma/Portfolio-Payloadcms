@@ -13,6 +13,7 @@ import { FormationBlock } from '@/blocks/Formation/Component'
 import { MediaBlock } from '@/blocks/MediaBlock/Component'
 import { HeaderBlock } from './HeaderBlock/Component'
 import { ProjectsBlock } from '@/blocks/Projects/Component'
+import { SimpleFooterBlock } from '@/blocks/SimpleFooter/Component'
 import { SkillsBlock } from './Skills/Component'
 import { StatsBlock } from '@/blocks/Stats/Component'
 import { TestimonialsBlock } from '@/blocks/Testimonials/Component'
@@ -29,6 +30,7 @@ const blockComponents = {
   mediaBlock: MediaBlock,
   headerBlock: HeaderBlock,
   projects: ProjectsBlock,
+  simpleFooter: SimpleFooterBlock,
   skills: SkillsBlock,
   stats: StatsBlock,
   testimonials: TestimonialsBlock,
@@ -52,7 +54,7 @@ export const RenderBlocks: React.FC<{
 
             if (Block) {
               return (
-                <div  key={index}>
+                <div id={block.anchorId || undefined} key={index}>
                   {/* @ts-expect-error there may be some mismatch between the expected types here */}
                   <Block {...block} disableInnerContainer />
                 </div>

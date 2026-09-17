@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform, type Variants } from 'framer-motion'
 import type { DeveloperPortfolioBlock as DeveloperPortfolioBlockType } from '@/payload-types'
 import { Media } from '@/components/Media'
 import { useTheme } from '@/providers/Theme'
+import { LiquidEtherBackground } from '@/components/custom/LiquidEtherBackground'
 import {
   TypewriterText,
   ParticleBackground,
@@ -19,6 +20,25 @@ const easeOut = [0.16, 1, 0.3, 1] as const
 const easeSmooth = [0.25, 0.46, 0.45, 0.94] as const
 
 const MONO = "'JetBrains Mono', monospace"
+
+const toIdentifier = (value?: string | null): string => {
+  if (!value) return ''
+  const identifier = value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-zA-Z0-9\s$_]/g, ' ')
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((word, index) =>
+      index === 0
+        ? word.charAt(0).toLowerCase() + word.slice(1)
+        : word.charAt(0).toUpperCase() + word.slice(1),
+    )
+    .join('')
+  if (!identifier) return ''
+  return /^[0-9]/.test(identifier) ? `_${identifier}` : identifier
+}
 
 const DeveloperPortfolioBlockComponent: React.FC<Props> = ({
   name,
@@ -93,6 +113,11 @@ const DeveloperPortfolioBlockComponent: React.FC<Props> = ({
   }
 
   const codeLines = codeCard?.lines || []
+  const storedVariable = codeCard?.variableName?.trim()
+  const codeVariable =
+    (storedVariable && storedVariable !== 'developer' ? storedVariable : '') ||
+    toIdentifier(title) ||
+    'developer'
 
   return (
     <div
@@ -226,7 +251,7 @@ const DeveloperPortfolioBlockComponent: React.FC<Props> = ({
                 </div>
                 <div className="p-6" style={{ fontFamily: MONO, fontSize: '0.8rem', lineHeight: 1.8 }}>
                   <div style={{ color: '#6d28d9' }}>
-                    const <span style={{ color: '#a78bfa' }}>{codeCard?.variableName || 'developer'}</span> = {'{'}
+                    const <span style={{ color: '#a78bfa' }}>{codeVariable}</span> = {'{'}
                   </div>
                   {codeLines.map((line, index) => (
                     <div key={index} className="ml-4">
@@ -270,7 +295,7 @@ const DeveloperPortfolioBlockComponent: React.FC<Props> = ({
                   {stats.map((stat, index) => (
                     <motion.div
                       key={index}
-                      className="rounded-xl p-4 text-center"
+                      className="relative isolate overflow-hidden rounded-xl p-4 text-center"
                       style={{
                         border: '1px solid rgba(139,92,246,0.12)',
                         background: 'rgba(255,255,255,0.03)',
@@ -278,6 +303,8 @@ const DeveloperPortfolioBlockComponent: React.FC<Props> = ({
                       }}
                       variants={imageVariants}
                     >
+                      <LiquidEtherBackground />
+
                       <div className="text-2xl font-bold mb-0.5" style={{ color: '#c4b5fd' }}>{stat.value}</div>
                       <div className="text-xs" style={{ color: isDark ? 'rgba(232,224,255,0.4)' : 'rgba(42,33,64,0.4)', lineHeight: 1.3 }}>{stat.label}</div>
                     </motion.div>

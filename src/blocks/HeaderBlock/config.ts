@@ -1,6 +1,5 @@
 import { link } from '@/fields/link'
 import { menuField } from '@/fields/menuField'
-import { HeaderSelect as HeaderSelectType } from '@/payload-types'
 import type { Block } from 'payload'
 
 export const HeaderBlock: Block = {

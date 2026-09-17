@@ -6,6 +6,7 @@ import type { StatsBlock as StatsBlockType } from '@/payload-types'
 import { Media } from '@/components/Media'
 import { useTheme } from '@/providers/Theme'
 import { Particles } from '@/components/custom/Particles'
+import { LiquidEtherBackground } from '@/components/custom/LiquidEtherBackground'
 
 type Props = {
   disableInnerContainer?: boolean
@@ -101,7 +102,7 @@ const StatsBlockComponent: React.FC<Props> = ({
           {(stats || []).map((stat, index) => (
             <motion.div
               key={index}
-              className="rounded-2xl p-6 text-center"
+              className="relative isolate overflow-hidden rounded-2xl p-6 text-center"
               style={{
                 border: '1px solid rgba(139,92,246,0.12)',
                 background: 'rgba(255,255,255,0.03)',
@@ -109,6 +110,8 @@ const StatsBlockComponent: React.FC<Props> = ({
               }}
               variants={cardVariants}
             >
+              <LiquidEtherBackground />
+
               <div className="text-3xl md:text-4xl font-bold mb-1" style={{ color: '#c4b5fd' }}>
                 {stat.value}
               </div>

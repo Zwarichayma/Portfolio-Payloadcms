@@ -29,6 +29,7 @@ import {
   PreviewField,
 } from '@payloadcms/plugin-seo/fields'
 import { HeaderBlock } from '@/blocks/HeaderBlock/config'
+import { SimpleFooter } from '@/blocks/SimpleFooter/config'
 
 export const Pages: CollectionConfig<'pages'> = {
   slug: 'pages',
@@ -81,7 +82,7 @@ export const Pages: CollectionConfig<'pages'> = {
             {
               name: 'layout',
               type: 'blocks',
-              blocks: [CallToAction, Content, MediaBlock, Archive, FormBlock, DeveloperPortfolio, HeaderBlock, Skills, Experience, Projects, Testimonials, ContactForm, Formation, Stats],
+              blocks: [CallToAction, Content, MediaBlock, Archive, FormBlock, DeveloperPortfolio, HeaderBlock, Skills, Experience, Projects, Testimonials, ContactForm, Formation, Stats, SimpleFooter],
               required: true,
               admin: {
                 initCollapsed: true,

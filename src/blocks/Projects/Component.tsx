@@ -6,6 +6,7 @@ import type { ProjectsBlock as ProjectsBlockType } from '@/payload-types'
 import { Media } from '@/components/Media'
 import { useTheme } from '@/providers/Theme'
 import { Particles } from '@/components/custom/Particles'
+import { LiquidEtherBackground } from '@/components/custom/LiquidEtherBackground'
 
 type Skill = NonNullable<ProjectsBlockType['projects']>[0]
 
@@ -20,7 +21,6 @@ const easePro = [0.19, 1, 0.22, 1] as const
 const ProjectCard: React.FC<ProjectCardProps> = ({ project, getTechColor, isDark }) => {
   const cardRef = useRef<HTMLDivElement>(null)
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
-  const [isHovered, setIsHovered] = useState(false)
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!cardRef.current) return
@@ -34,10 +34,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, getTechColor, isDark
   return (
     <motion.div
       ref={cardRef}
-      className="group relative overflow-hidden rounded-2xl will-change-transform flex flex-col"
+      className="group relative isolate overflow-hidden rounded-2xl will-change-transform flex flex-col"
       style={{
         backgroundColor: isDark ? 'rgba(23,20,42,0.6)' : 'rgba(255,255,255,0.7)',
-        borderColor: isDark ? 'rgba(139,92,246,0.15)' : 'rgba(139,92,246,0.2)',
+        border: `1px solid ${isDark ? 'rgba(139,92,246,0.15)' : 'rgba(139,92,246,0.2)'}`,
         backdropFilter: 'blur(12px)',
         WebkitBackdropFilter: 'blur(12px)',
         boxShadow: isDark
@@ -46,8 +46,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, getTechColor, isDark
         transition: 'transform 0.5s cubic-bezier(0.19, 1, 0.22, 1), box-shadow 0.5s cubic-bezier(0.19, 1, 0.22, 1)',
       }}
       onMouseMove={handleMouseMove}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
       whileHover={{
         y: -4,
         boxShadow: isDark
@@ -55,6 +53,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, getTechColor, isDark
           : '0 20px 40px -12px rgb(0 0 0 / 0.08), 0 0 0 1px rgba(124,58,237,0.15), inset 0 1px 0 0 rgba(255,255,255,0.9)',
       }}
     >
+      <LiquidEtherBackground />
+
       <div
         className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 rounded-2xl"
         style={{
@@ -124,7 +124,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, getTechColor, isDark
 
         {project.technologies && project.technologies.length > 0 && (
           <div className="flex flex-wrap gap-1.5">
-            {project.technologies.map((tech: any, i: number) => (
+            {project.technologies.map((tech, i) => (
               <span
                 key={i}
                 className={`text-[10px] px-2 py-0.5 rounded-md ${getTechColor(tech.color || 'blue')}`}

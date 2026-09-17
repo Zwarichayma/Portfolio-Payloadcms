@@ -1,9 +1,12 @@
+import { anchorIdField } from '@/fields/anchorIdField'
+
 import type { Block } from 'payload'
 
 export const DeveloperPortfolio: Block = {
   slug: 'developerPortfolio',
   interfaceName: 'DeveloperPortfolioBlock',
   fields: [
+    anchorIdField('developerPortfolio'),
     {
       name: 'name',
       type: 'text',
@@ -83,8 +86,11 @@ export const DeveloperPortfolio: Block = {
         {
           name: 'variableName',
           type: 'text',
-          label: 'Nom de la variable',
-          defaultValue: 'developer',
+          label: 'Nom de la variable (optionnel)',
+          admin: {
+            description:
+              "Laisser vide pour utiliser automatiquement le Job Title (ex: 'Full Stack Developer' → fullStackDeveloper).",
+          },
         },
         {
           name: 'lines',

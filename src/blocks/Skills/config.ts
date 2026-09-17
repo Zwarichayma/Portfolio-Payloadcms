@@ -1,9 +1,12 @@
+import { anchorIdField } from '@/fields/anchorIdField'
+
 import type { Block } from 'payload'
 
 export const Skills: Block = {
   slug: 'skills',
   interfaceName: 'SkillsBlock',
   fields: [
+    anchorIdField('skills'),
     {
       name: 'title',
       type: 'text',
@@ -111,7 +114,7 @@ export const Skills: Block = {
         { label: 'Progress Bars', value: 'progress' },
         { label: 'Circular Progress', value: 'circular' },
         { label: 'Interactive Chart', value: 'chart' },
-        { label: 'Card Swap Animation', value: 'cardSwap' },
+        { label: 'Scroll Carousel', value: 'cardSwap' },
       ],
       defaultValue: 'grid',
     },

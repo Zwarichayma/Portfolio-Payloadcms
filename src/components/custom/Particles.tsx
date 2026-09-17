@@ -21,9 +21,10 @@ export const Particles: React.FC<ParticlesProps> = ({ count = 20, className = ''
         id: i,
         x: Math.random() * 100,
         y: Math.random() * 100,
-        size: Math.random() * 2 + 0.5,
-        duration: 8 + Math.random() * 12,
-        delay: Math.random() * 5,
+        size: Math.random() * 3.5 + 2,
+        duration: 6 + Math.random() * 10,
+        delay: Math.random() * 4,
+        drift: Math.random() * 40 - 20,
       })),
     [count],
   )
@@ -41,11 +42,14 @@ export const Particles: React.FC<ParticlesProps> = ({ count = 20, className = ''
             height: p.size,
             left: `${p.x}%`,
             top: `${p.y}%`,
-            backgroundColor: 'rgba(124,58,237,0.15)',
+            backgroundColor: 'rgba(124,58,237,0.55)',
+            boxShadow: '0 0 6px rgba(124,58,237,0.45)',
           }}
           animate={{
-            y: [0, -30, 0],
-            opacity: [0.15, 0.4, 0.15],
+            y: [0, -40, 0],
+            x: [0, p.drift, 0],
+            opacity: [0.25, 0.8, 0.25],
+            scale: [1, 1.25, 1],
           }}
           transition={{
             duration: p.duration,

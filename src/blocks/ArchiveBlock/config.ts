@@ -1,3 +1,5 @@
+import { anchorIdField } from '@/fields/anchorIdField'
+
 import type { Block } from 'payload'
 
 import {
@@ -11,6 +13,7 @@ export const Archive: Block = {
   slug: 'archive',
   interfaceName: 'ArchiveBlock',
   fields: [
+    anchorIdField('archive'),
     {
       name: 'introContent',
       type: 'richText',

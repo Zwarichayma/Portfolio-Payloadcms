@@ -10,7 +10,7 @@ const PrimaryButton = React.forwardRef<
     showArrowMobile?: boolean
     arrowPosition?: 'left' | 'right'
     animated?: boolean
-    animationStyle?: any
+    animationStyle?: 'shine' | 'expand' | 'none'
     children: React.ReactNode
   }
 >(
@@ -21,7 +21,7 @@ const PrimaryButton = React.forwardRef<
       showArrowMobile = false,
       arrowPosition = 'right',
       animated,
-      animationStyle,
+      animationStyle: _animationStyle,
       children,
       ...props
     },
@@ -70,35 +70,6 @@ const PrimaryButton = React.forwardRef<
         transition: {
           duration: 0.7,
           ease: easeInOut,
-        },
-      },
-    }
-
-    // Arrow animation - appears part by part with clipPath
-    const arrowVariants = {
-      hidden: {
-        opacity: 0,
-        scale: 0.8,
-        clipPath: arrowPosition === 'right' ? 'inset(0 100% 0 0)' : 'inset(0 0 0 100%)',
-      },
-      visible: {
-        opacity: 1,
-        scale: 1,
-        clipPath: 'inset(0 0% 0 0%)',
-        transition: {
-          opacity: { duration: 0.4, ease: easeInOut },
-          scale: { duration: 0.4, ease: easeInOut },
-          clipPath: { duration: 0.5, ease: easeInOut },
-        },
-      },
-      exit: {
-        opacity: 0,
-        scale: 0.8,
-        clipPath: arrowPosition === 'right' ? 'inset(0 100% 0 0)' : 'inset(0 0 0 100%)',
-        transition: {
-          opacity: { duration: 0.3, ease: easeInOut },
-          scale: { duration: 0.3, ease: easeInOut },
-          clipPath: { duration: 0.4, ease: easeInOut },
         },
       },
     }
