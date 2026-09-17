@@ -10,8 +10,8 @@ const SecondaryFilledButton = React.forwardRef<HTMLButtonElement, SecondaryFille
       className,
       showArrow = true,
       arrowPosition = 'right',
-      animated,
-      animationStyle,
+      animated: _animated,
+      animationStyle: _animationStyle,
       children,
       ...props
     },

@@ -1,6 +1,5 @@
 import { link } from '@/fields/link'
 import { menuField } from '@/fields/menuField'
-import { HeaderSelect as HeaderSelectType } from '@/payload-types'
 import type { Block } from 'payload'
 
 export const HeaderBlock: Block = {
@@ -131,73 +130,7 @@ export const HeaderBlock: Block = {
         }),
       ],
     },
-    {
-      name: 'overrideConsultantButton',
-      type: 'checkbox',
-      label: 'Redéfinir le bouton "Trouver mon consultant" mobile',
-      defaultValue: false,
-      admin: {
-        description:
-          'Coché : Personnalise le bouton "Trouver mon consultant" du menu mobile. ☐ Décoché : Utilise la configuration du header global.',
-      },
-    },
-    {
-      name: 'consultantButton',
-      type: 'group',
-      label: 'Bouton "Trouver mon consultant" mobile personnalisé',
-      admin: {
-        condition: (_, siblingData) => siblingData?.overrideConsultantButton === true,
-        description:
-          'Configurez ici le bouton "Trouver mon consultant" qui apparaît en bas du menu mobile pour cette page.',
-      },
-      fields: [
-        {
-          name: 'label',
-          type: 'text',
-          label: 'Label du bouton',
-        },
-        {
-          type: 'row',
-          fields: [
-            {
-              name: 'linkType',
-              type: 'radio',
-              admin: {
-                layout: 'horizontal',
-                width: '100%',
-              },
-              options: [
-                {
-                  label: 'Internal link',
-                  value: 'reference',
-                },
-                {
-                  label: 'Custom URL',
-                  value: 'custom',
-                },
-              ],
-            },
-          ],
-        },
-        {
-          name: 'reference',
-          type: 'relationship',
-          admin: {
-            condition: (_, siblingData) => siblingData?.linkType === 'reference',
-          },
-          label: 'Document to link to',
-          relationTo: ['pages', 'posts'],
-        },
-        {
-          name: 'href',
-          type: 'text',
-          admin: {
-            condition: (_, siblingData) => siblingData?.linkType === 'custom',
-          },
-          label: 'Custom URL',
-        },
-      ],
-    },
+
   ],
   
 }

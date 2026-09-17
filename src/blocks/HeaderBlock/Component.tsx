@@ -22,45 +22,30 @@ export const HeaderBlock: React.FC<HeaderBlockProps> = async (props) => {
     overrideLogo,
     overrideMenus,
     overrideCtaButton,
-    overrideConsultantButton,
     logo,
     logoLink,
     customMenus,
     ctaButton,
-    consultantButton,
-    anchorId,
   } = props
-  // Fetch global header data
   const globalHeader = await getGlobalHeader()
 
-  // Compute all logic on server side
   const logoToUse = overrideLogo ? logo : globalHeader?.logo
   const logoLinkToUse = overrideLogo ? logoLink : globalHeader?.logoLink
   const menusToUse = overrideMenus ? customMenus : globalHeader?.menus || []
   const ctaButtonToUse = overrideCtaButton ? ctaButton : globalHeader?.ctaButton
-  const consultantButtonToUse = overrideConsultantButton
-    ? consultantButton
-    : globalHeader?.consultantButton
 
-  // Validation checks
   const hasValidMenus = menusToUse && menusToUse.length > 0
   const hasValidCtaButton =
     ctaButtonToUse &&
     ctaButtonToUse.label &&
     typeof ctaButtonToUse.label === 'string' &&
     ctaButtonToUse.label.trim() !== ''
-  const hasValidConsultantButton =
-    consultantButtonToUse &&
-    consultantButtonToUse.label &&
-    typeof consultantButtonToUse.label === 'string' &&
-    consultantButtonToUse.label.trim() !== ''
 
-  const shouldShowMobileMenu = hasValidMenus || hasValidCtaButton || hasValidConsultantButton
+  const shouldShowMobileMenu = hasValidMenus || hasValidCtaButton
   const shouldShowHeader =
     !!logoToUse ||
     hasValidMenus ||
     hasValidCtaButton ||
-    hasValidConsultantButton ||
     shouldShowMobileMenu
 
   if (!shouldShowHeader) {
@@ -68,7 +53,7 @@ export const HeaderBlock: React.FC<HeaderBlockProps> = async (props) => {
   }
   return (
     <>
-      <section id={anchorId || undefined}>
+      <section>
         <HeaderWrapper>
           <header className="container lg:[--has-sidebar:1] lg:w-full lg:px-24 md:px-40 py-16 flex items-center justify-between h-full">
             {/* Logo et Navigation */}
@@ -132,7 +117,7 @@ export const HeaderBlock: React.FC<HeaderBlockProps> = async (props) => {
                     href={ctaButtonToUse.buttonLink?.url}
                     reference={ctaButtonToUse.buttonLink?.reference}
                     linkType={ctaButtonToUse.buttonLink?.type || 'custom'}
-                    newTab={(ctaButtonToUse.buttonLink as any)?.newTab || false}
+                    newTab={ctaButtonToUse.buttonLink?.newTab || false}
                   >
                     <CustomButton variant="primary" className="">
                       {ctaButtonToUse.label}
@@ -148,7 +133,6 @@ export const HeaderBlock: React.FC<HeaderBlockProps> = async (props) => {
                   <MobileMenuButton
                     menus={menusToUse}
                     ctaButton={ctaButtonToUse}
-                    consultantButton={consultantButtonToUse}
                   />
                 )}
               </div>
@@ -156,8 +140,6 @@ export const HeaderBlock: React.FC<HeaderBlockProps> = async (props) => {
           </header>
         </HeaderWrapper>
 
-        {/* Spacer for fixed header */}
-        <div className="h-[72px]" />
        
       </section>
     </>

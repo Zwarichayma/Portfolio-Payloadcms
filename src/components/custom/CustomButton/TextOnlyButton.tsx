@@ -5,7 +5,7 @@ import * as React from 'react'
 import { BaseButtonProps } from './types'
 import { cn } from '@/utilities/ui'
 
-export interface TextOnlyButtonProps extends BaseButtonProps {}
+export type TextOnlyButtonProps = BaseButtonProps
 
 const TextOnlyButton = React.forwardRef<HTMLButtonElement, TextOnlyButtonProps>(
   ({ className, children, showArrow = true, arrowPosition = 'right', ...props }, ref) => {

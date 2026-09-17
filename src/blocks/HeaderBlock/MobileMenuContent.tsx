@@ -14,12 +14,10 @@ import React, { useMemo, useState } from 'react'
 
 type MenusType = HeaderType['menus']
 type CtaButtonType = HeaderType['ctaButton']
-type ConsultantButtonType = HeaderType['consultantButton']
 
 interface MobileMenuContentProps {
   menus: MenusType
   ctaButton?: CtaButtonType | null
-  consultantButton?: ConsultantButtonType | null
   onClose: () => void
   isOpen: boolean
 }
@@ -27,7 +25,6 @@ interface MobileMenuContentProps {
 export const MobileMenuContent: React.FC<MobileMenuContentProps> = ({
   menus,
   ctaButton,
-  consultantButton,
   onClose,
   isOpen: _isOpen,
 }) => {
@@ -264,31 +261,11 @@ export const MobileMenuContent: React.FC<MobileMenuContentProps> = ({
                   href={ctaButton.buttonLink?.url}
                   reference={ctaButton.buttonLink?.reference}
                   linkType={ctaButton.buttonLink?.type || 'custom'}
-                  newTab={(ctaButton.buttonLink as any)?.newTab || false}
+                  newTab={ctaButton.buttonLink?.newTab || false}
                   onClick={onClose}
                 >
                   <CustomButton variant="primary" className="w-full!">
                     {ctaButton.label}
-                  </CustomButton>
-                </CustomLink>
-              </div>
-            )}
-
-          {/* Bouton Trouver mon consultant */}
-          {consultantButton &&
-            consultantButton.label &&
-            typeof consultantButton.label === 'string' &&
-            consultantButton.label.trim() !== '' && (
-              <div className="w-full">
-                <CustomLink
-                  href={consultantButton.href}
-                  reference={consultantButton.reference}
-                  linkType={consultantButton.linkType || 'custom'}
-                  newTab={(consultantButton as any)?.newTab || false}
-                  onClick={onClose}
-                >
-                  <CustomButton variant="secondary-filled" className="w-full">
-                    {consultantButton.label}
                   </CustomButton>
                 </CustomLink>
               </div>

@@ -10,7 +10,7 @@ const PrimaryButton = React.forwardRef<
     showArrowMobile?: boolean
     arrowPosition?: 'left' | 'right'
     animated?: boolean
-    animationStyle?: any
+    animationStyle?: 'shine' | 'expand' | 'none'
     children: React.ReactNode
   }
 >(
@@ -21,7 +21,7 @@ const PrimaryButton = React.forwardRef<
       showArrowMobile = false,
       arrowPosition = 'right',
       animated,
-      animationStyle,
+      animationStyle: _animationStyle,
       children,
       ...props
     },
@@ -74,35 +74,6 @@ const PrimaryButton = React.forwardRef<
       },
     }
 
-    // Arrow animation - appears part by part with clipPath
-    const arrowVariants = {
-      hidden: {
-        opacity: 0,
-        scale: 0.8,
-        clipPath: arrowPosition === 'right' ? 'inset(0 100% 0 0)' : 'inset(0 0 0 100%)',
-      },
-      visible: {
-        opacity: 1,
-        scale: 1,
-        clipPath: 'inset(0 0% 0 0%)',
-        transition: {
-          opacity: { duration: 0.4, ease: easeInOut },
-          scale: { duration: 0.4, ease: easeInOut },
-          clipPath: { duration: 0.5, ease: easeInOut },
-        },
-      },
-      exit: {
-        opacity: 0,
-        scale: 0.8,
-        clipPath: arrowPosition === 'right' ? 'inset(0 100% 0 0)' : 'inset(0 0 0 100%)',
-        transition: {
-          opacity: { duration: 0.3, ease: easeInOut },
-          scale: { duration: 0.3, ease: easeInOut },
-          clipPath: { duration: 0.4, ease: easeInOut },
-        },
-      },
-    }
-
     // Button width animation - dynamic padding based on arrow visibility
     const hasFullWidth = className.includes('w-full')
     const buttonVariants = {
@@ -139,19 +110,19 @@ const PrimaryButton = React.forwardRef<
     const getButtonColors = () => {
       if (theme === 'dark') {
         return {
-          normal: '#4F46E5', // indigo-600
-          hover: '#4338CA',   // indigo-700
-          shine: '#A5B4FC',   // indigo-300
+          normal: '#7C3AED', // violet-600
+          hover: '#6D28D9',   // violet-700
+          shine: '#C4B5FD',   // violet-300
           text: '#FFFFFF',
-          shadow: '0px 90px 36px rgba(79, 70, 229, 0.01), 0px 51px 30px rgba(79, 70, 229, 0.05), 0px 23px 23px rgba(79, 70, 229, 0.09), 0px 6px 12px rgba(79, 70, 229, 0.1)'
+          shadow: '0px 90px 36px rgba(124, 58, 237, 0.01), 0px 51px 30px rgba(124, 58, 237, 0.05), 0px 23px 23px rgba(124, 58, 237, 0.09), 0px 6px 12px rgba(124, 58, 237, 0.1)'
         }
       }
       return {
-        normal: '#397DFF',   // blue default
-        hover: '#2D6DE6',    // blue hover
-        shine: '#ABC8FF',    // blue shine
+        normal: '#7C3AED',   // violet-600
+        hover: '#6D28D9',    // violet-700
+        shine: '#C4B5FD',    // violet-300
         text: '#FFFFFF',
-        shadow: '0px 90px 36px rgba(57, 125, 255, 0.01), 0px 51px 30px rgba(57, 125, 255, 0.05), 0px 23px 23px rgba(57, 125, 255, 0.09), 0px 6px 12px rgba(57, 125, 255, 0.1)'
+        shadow: '0px 90px 36px rgba(124, 58, 237, 0.01), 0px 51px 30px rgba(124, 58, 237, 0.05), 0px 23px 23px rgba(124, 58, 237, 0.09), 0px 6px 12px rgba(124, 58, 237, 0.1)'
       }
     }
 

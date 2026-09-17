@@ -1,5 +1,6 @@
 "use client"
 import { useState, useEffect } from "react"
+import Image from "next/image"
 import { useField } from '@payloadcms/ui'
 import type { TextFieldClientProps } from 'payload'
 
@@ -19,25 +20,14 @@ export const SelectFormFields = (props: SelectFormFieldsProps) => {
   )
 
   useEffect(() => {
-    console.log("[SelectFormFields] Valeur reçue de Payload:", value)
     if (value && (value === "left" || value === "center" || value === "right")) {
       setCurrentValue(value)
     }
   }, [value])
 
-  let alignClass = ""
-  if (currentValue === "left") alignClass = "text-left"
-  if (currentValue === "center") alignClass = "text-center"
-  if (currentValue === "right") alignClass = "text-right"
-
   const handleChange = (newValue: "left" | "center" | "right") => {
-    console.log("[SelectFormFields] Changement vers:", newValue)
-    
     setCurrentValue(newValue)
-    
     setValue(newValue)
-    
-    console.log("[SelectFormFields] setValue appelé avec:", newValue)
   }
 
   return (
@@ -50,7 +40,7 @@ export const SelectFormFields = (props: SelectFormFieldsProps) => {
             aria-label="Align left"
             onClick={() => handleChange("left")}
           >
-            <img src="/blocks/textleft.png" alt="Align left" className="align-icon" />
+            <Image src="/blocks/textleft.png" alt="Align left" width={35} height={35} className="align-icon" />
           </button>
           <button
             type="button"
@@ -58,7 +48,7 @@ export const SelectFormFields = (props: SelectFormFieldsProps) => {
             aria-label="Align center"
             onClick={() => handleChange("center")}
           >
-            <img src="/blocks/textcenter.png" alt="Align center" className="align-icon" />
+            <Image src="/blocks/textcenter.png" alt="Align center" width={35} height={35} className="align-icon" />
           </button>
           <button
             type="button"
@@ -66,7 +56,7 @@ export const SelectFormFields = (props: SelectFormFieldsProps) => {
             aria-label="Align right"
             onClick={() => handleChange("right")}
           >
-            <img src="/blocks/text right.png" alt="Align right" className="align-icon" />
+            <Image src="/blocks/text right.png" alt="Align right" width={35} height={35} className="align-icon" />
           </button>
         </div>
       </div>

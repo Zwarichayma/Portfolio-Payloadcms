@@ -6,15 +6,7 @@ import { cn } from '@/utilities/ui'
 
 const OutlineButton = React.forwardRef<HTMLButtonElement, OutlineButtonProps>(
   (
-    {
-      className,
-      showArrow = true,
-      arrowPosition = 'right',
-      animated,
-      animationStyle,
-      children,
-      ...props
-    },
+    { className, showArrow = true, arrowPosition = 'right', children, ...props },
     ref,
   ) => {
     return (

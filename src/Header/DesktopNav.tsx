@@ -5,6 +5,7 @@ import { CustomButton } from '@/components/custom/CustomButton'
 import { CustomLink } from '@/components/custom/CustomLink'
 import type { Header as HeaderType } from '@/payload-types'
 import { cn } from '@/utilities/ui'
+import { useTheme } from '@/providers/Theme'
 import Image from 'next/image'
 import NextLink from 'next/link'
 import React, { useRef, useState } from 'react'
@@ -14,10 +15,9 @@ interface DesktopNavProps {
 }
 
 export const DesktopNav: React.FC<DesktopNavProps> = ({ menus }) => {
-  if (!menus || menus.length === 0) return null
-
   const [openMenu, setOpenMenu] = useState<string | null>(null)
-  const headerRef = useRef<HTMLElement | null>(null)
+
+  if (!menus || menus.length === 0) return null
 
   return (
     <>
@@ -74,6 +74,30 @@ const DesktopMenuItem: React.FC<{
   const menuItemRef = useRef<HTMLDivElement>(null)
   const uniqueMenuKey = `menu-${menuIndex}`
   const isOpen = openMenu === uniqueMenuKey
+  const { theme } = useTheme()
+  const isDark = theme === 'dark'
+
+  const dropdownBg = isDark ? '#111827' : '#ffffff'
+  const itemHoverBg = isDark ? '#374151' : '#f9fafb'
+  const triggerActiveBg = isDark ? '#374151' : '#f3f4f6'
+  const footerBg = isDark ? '#1f2937' : '#f3f4f6'
+  const footerBorder = isDark ? '#374151' : '#e5e7eb'
+  const itemTextColor = isDark ? '#e5e7eb' : '#191d1e'
+  const arrowFilter = isDark ? 'invert(1)' : undefined
+
+  // Gestion du clic en dehors
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuItemRef.current && !menuItemRef.current.contains(event.target as Node)) {
+        setOpenMenu(null)
+      }
+    }
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+      return () => document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isOpen, setOpenMenu])
 
   const hasTitle = !!(title && String(title).trim())
   if (!hasTitle) return null
@@ -149,20 +173,6 @@ const DesktopMenuItem: React.FC<{
 
   const handleDropdownItemClick = () => setOpenMenu(null)
 
-  // Gestion du clic en dehors
-  React.useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (menuItemRef.current && !menuItemRef.current.contains(event.target as Node)) {
-        setOpenMenu(null)
-      }
-    }
-
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside)
-      return () => document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [isOpen, setOpenMenu])
-
   // Direct link
   if (menuLinkUrl) {
     return (
@@ -173,7 +183,7 @@ const DesktopMenuItem: React.FC<{
         newTab={false}
         className={cn(
           'flex flex-row items-center px-24 py-16 gap-7 cursor-pointer h-[2.375rem] relative transition-all duration-200',
-          'hover:bg-gray-100',
+          'hover:bg-gray-100 dark:hover:bg-gray-700',
         )}
       >
         <CustomText
@@ -182,7 +192,8 @@ const DesktopMenuItem: React.FC<{
           fontWeight="medium"
           tracking="standard"
           color="secondary"
-          className="whitespace-nowrap"
+          customColor={itemTextColor}
+          className="whitespace-nowrap dark:text-gray-200"
         >
           {title}
         </CustomText>
@@ -196,9 +207,16 @@ const DesktopMenuItem: React.FC<{
       ref={menuItemRef}
       className={cn(
         'flex flex-row items-center px-24 py-16 gap-7 cursor-pointer h-[2.375rem] relative transition-all duration-200',
-        'hover:bg-gray-100',
-        isOpen && items && items.length > 0 ? 'bg-gray-100' : '',
+        'hover:bg-gray-100 dark:hover:bg-gray-700',
+        isOpen && items && items.length > 0 ? 'bg-gray-100 dark:bg-gray-700' : '',
       )}
+      style={isOpen ? { backgroundColor: triggerActiveBg } : undefined}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.backgroundColor = triggerActiveBg
+      }}
+      onMouseLeave={(e) => {
+        if (!isOpen) e.currentTarget.style.backgroundColor = 'transparent'
+      }}
       onClick={handleMenuClick}
     >
       <CustomText
@@ -207,7 +225,8 @@ const DesktopMenuItem: React.FC<{
         fontWeight="medium"
         tracking="standard"
         color="secondary"
-        className="whitespace-nowrap"
+        customColor={itemTextColor}
+        className="whitespace-nowrap dark:text-gray-200"
       >
         {title}
       </CustomText>
@@ -218,13 +237,17 @@ const DesktopMenuItem: React.FC<{
             alt="arrow down"
             width={8}
             height={5}
+            style={{ filter: arrowFilter }}
             className={cn(
-              'flex-none order-1 flex-grow-0 transition-transform duration-200',
+              'flex-none order-1 flex-grow-0 transition-transform duration-200 dark:invert',
               isOpen ? 'transform rotate-180' : '',
             )}
           />
           {isOpen && (
-            <div className="absolute left-0 top-[61px] z-50 bg-white inline-flex flex-col h-auto shadow-[0px_321px_128px_rgba(0,0,0,0.01),0px_181px_108px_rgba(0,0,0,0.05),0px_80px_80px_rgba(0,0,0,0.09),0px_20px_44px_rgba(0,0,0,0.1)]">
+            <div
+              className="absolute left-0 top-[61px] z-50 bg-white dark:bg-gray-900 inline-flex flex-col h-auto shadow-[0px_321px_128px_rgba(0,0,0,0.01),0px_181px_108px_rgba(0,0,0,0.05),0px_80px_80px_rgba(0,0,0,0.09),0px_20px_44px_rgba(0,0,0,0.1)]"
+              style={{ backgroundColor: dropdownBg }}
+            >
               {/* Section des items avec colonnes dynamiques et bouton optionnel */}
               <div className="p-24">
                 {/* Items en colonnes */}
@@ -259,7 +282,13 @@ const DesktopMenuItem: React.FC<{
                           const ItemContent = (
                             <div
                               onClick={handleDropdownItemClick}
-                              className="flex items-center justify-start gap-7 px-[0.8125rem] py-[0.4375rem] pl-[0.375rem] flex-shrink-0 cursor-pointer w-full whitespace-nowrap overflow-hidden text-ellipsis h-[2.375rem] min-w-[250px] hover:bg-gray-50 rounded"
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.backgroundColor = itemHoverBg
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.backgroundColor = 'transparent'
+                              }}
+                              className="flex items-center justify-start gap-7 px-[0.8125rem] py-[0.4375rem] pl-[0.375rem] flex-shrink-0 cursor-pointer w-full whitespace-nowrap overflow-hidden text-ellipsis h-[2.375rem] min-w-[250px] hover:bg-gray-50 dark:hover:bg-gray-700 rounded"
                             >
                               {item.icon && (
                                 <span className="w-6 h-6 flex-shrink-0">{item.icon}</span>
@@ -270,7 +299,8 @@ const DesktopMenuItem: React.FC<{
                                 fontWeight="medium"
                                 tracking="standard"
                                 color="secondary"
-                                className=""
+                                customColor={itemTextColor}
+                                className="dark:text-gray-200"
                               >
                                 {item.label}
                               </CustomText>
@@ -299,7 +329,10 @@ const DesktopMenuItem: React.FC<{
                 actionLink.href &&
                 actionLink.label &&
                 actionLink.label.trim() !== '' && (
-                  <div className="flex flex-col items-center justify-center p-24 border-t border-gray-100 bg-gray-100">
+                  <div
+                    className="flex flex-col items-center justify-center p-24 border-t border-gray-100 bg-gray-100 dark:border-gray-700 dark:bg-gray-800"
+                    style={{ backgroundColor: footerBg, borderTopColor: footerBorder }}
+                  >
                     <NextLink
                       href={actionLink.href}
                       onClick={handleDropdownItemClick}
@@ -320,7 +353,8 @@ const DesktopMenuItem: React.FC<{
                         alt="arrow"
                         width={13.33}
                         height={10.02}
-                        className="text-primary"
+                        style={{ filter: arrowFilter }}
+                        className="text-primary dark:invert"
                       />
                     </NextLink>
                   </div>

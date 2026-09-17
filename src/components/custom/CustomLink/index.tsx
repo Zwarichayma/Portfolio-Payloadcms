@@ -21,19 +21,23 @@ type CMSLinkType = {
 
 // Interface pour le composant Link générique
 export interface LinkReference {
-  relationTo: string
-  value:
+  relationTo?: string
+  value?:
     | {
-        slug?: string
-        id?: string
-        [key: string]: any
+        slug?: string | null
+        id?: string | number
+        [key: string]: unknown
       }
     | string
+    | number
+    | null
+  slug?: string | null
+  [key: string]: unknown
 }
 
 export interface LinkProps extends Omit<React.ComponentProps<typeof NextLink>, 'href'> {
   href?: string | null
-  reference?: LinkReference | any
+  reference?: unknown
   linkType?: 'none' | 'reference' | 'custom'
   newTab?: boolean
   children: React.ReactNode
@@ -55,29 +59,31 @@ export const CustomLink: React.FC<LinkProps> = ({
 }) => {
   // Fonction pour obtenir l'URL finale
   const getUrl = (): string => {
+    const ref = reference as LinkReference | string | null | undefined
+
     // Lien personnalisé
     if (linkType === 'custom' && href) {
       return href
     }
 
     // Référence interne
-    if (linkType === 'reference' && reference) {
+    if (linkType === 'reference' && ref) {
       // Si c'est un objet de référence avec value
-      if (typeof reference === 'object') {
-        if ('value' in reference && reference.value) {
-          const value = reference.value
-          if (typeof value === 'object' && value && 'slug' in value) {
+      if (typeof ref === 'object') {
+        if ('value' in ref && ref.value) {
+          const value = ref.value
+          if (typeof value === 'object' && value && 'slug' in value && value.slug) {
             return `/${value.slug}`
           }
         }
         // Si c'est directement un objet avec slug
-        if ('slug' in reference) {
-          return `/${reference.slug}`
+        if ('slug' in ref && ref.slug) {
+          return `/${ref.slug}`
         }
       }
       // Si c'est un ID string
-      if (typeof reference === 'string') {
-        return `/${reference}`
+      if (typeof ref === 'string') {
+        return `/${ref}`
       }
     }
 

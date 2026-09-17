@@ -72,6 +72,7 @@ export interface Config {
     media: Media;
     categories: Category;
     users: User;
+    contacts: Contact;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -89,6 +90,7 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
+    contacts: ContactsSelect<false> | ContactsSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -105,11 +107,9 @@ export interface Config {
   fallbackLocale: null;
   globals: {
     header: Header;
-    footer: Footer;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
-    footer: FooterSelect<false> | FooterSelect<true>;
   };
   locale: null;
   user: User & {
@@ -205,6 +205,14 @@ export interface Page {
     | FormBlock
     | DeveloperPortfolioBlock
     | HeaderBlockProps
+    | SkillsBlock
+    | ExperienceBlock
+    | ProjectsBlock
+    | TestimonialsBlock
+    | ContactFormBlock
+    | FormationBlock
+    | StatsBlock
+    | SimpleFooterBlock
   )[];
   meta?: {
     title?: string | null;
@@ -422,6 +430,10 @@ export interface User {
  * via the `definition` "CallToActionBlock".
  */
 export interface CallToActionBlock {
+  /**
+   * Unique ID for this section (anchor links, e.g. #services).
+   */
+  anchorId?: string | null;
   richText?: {
     root: {
       type: string;
@@ -473,6 +485,10 @@ export interface CallToActionBlock {
  * via the `definition` "ContentBlock".
  */
 export interface ContentBlock {
+  /**
+   * Unique ID for this section (anchor links, e.g. #services).
+   */
+  anchorId?: string | null;
   columns?:
     | {
         size?: ('oneThird' | 'half' | 'twoThirds' | 'full') | null;
@@ -526,6 +542,10 @@ export interface ContentBlock {
  * via the `definition` "MediaBlock".
  */
 export interface MediaBlock {
+  /**
+   * Unique ID for this section (anchor links, e.g. #services).
+   */
+  anchorId?: string | null;
   media: string | Media;
   id?: string | null;
   blockName?: string | null;
@@ -536,6 +556,10 @@ export interface MediaBlock {
  * via the `definition` "ArchiveBlock".
  */
 export interface ArchiveBlock {
+  /**
+   * Unique ID for this section (anchor links, e.g. #services).
+   */
+  anchorId?: string | null;
   introContent?: {
     root: {
       type: string;
@@ -570,6 +594,10 @@ export interface ArchiveBlock {
  * via the `definition` "FormBlock".
  */
 export interface FormBlock {
+  /**
+   * Unique ID for this section (anchor links, e.g. #services).
+   */
+  anchorId?: string | null;
   form: string | Form;
   enableIntro?: boolean | null;
   introContent?: {
@@ -770,6 +798,10 @@ export interface Form {
  * via the `definition` "DeveloperPortfolioBlock".
  */
 export interface DeveloperPortfolioBlock {
+  /**
+   * Unique ID for this section (anchor links, e.g. #services).
+   */
+  anchorId?: string | null;
   name: string;
   title?: string | null;
   description?: string | null;
@@ -779,6 +811,34 @@ export interface DeveloperPortfolioBlock {
     | {
         platform?: ('github' | 'linkedin' | 'twitter' | 'portfolio' | 'email') | null;
         url: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Badge affiché au-dessus du nom (ex: "Disponible — Open to work")
+   */
+  statusBadge?: string | null;
+  location?: string | null;
+  codeCard?: {
+    title?: string | null;
+    /**
+     * Laisser vide pour utiliser automatiquement le Job Title (ex: 'Full Stack Developer' → fullStackDeveloper).
+     */
+    variableName?: string | null;
+    lines?:
+      | {
+          key: string;
+          value: string;
+          color?: ('#34d399' | '#fbbf24' | '#f9a8d4' | '#a78bfa' | '#60a5fa') | null;
+          id?: string | null;
+        }[]
+      | null;
+    footerText?: string | null;
+  };
+  stats?:
+    | {
+        value: string;
+        label: string;
         id?: string | null;
       }[]
     | null;
@@ -897,30 +957,323 @@ export interface HeaderBlockProps {
       newTab?: boolean | null;
     };
   };
-  /**
-   * Coché : Personnalise le bouton "Trouver mon consultant" du menu mobile. ☐ Décoché : Utilise la configuration du header global.
-   */
-  overrideConsultantButton?: boolean | null;
-  /**
-   * Configurez ici le bouton "Trouver mon consultant" qui apparaît en bas du menu mobile pour cette page.
-   */
-  consultantButton?: {
-    label?: string | null;
-    linkType?: ('reference' | 'custom') | null;
-    reference?:
-      | ({
-          relationTo: 'pages';
-          value: string | Page;
-        } | null)
-      | ({
-          relationTo: 'posts';
-          value: string | Post;
-        } | null);
-    href?: string | null;
-  };
   id?: string | null;
   blockName?: string | null;
   blockType: 'headerBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SkillsBlock".
+ */
+export interface SkillsBlock {
+  /**
+   * Unique ID for this section (anchor links, e.g. #services).
+   */
+  anchorId?: string | null;
+  title: string;
+  /**
+   * Badge mono affiché au-dessus du titre (ex: // 04 — skills)
+   */
+  codeLabel?: string | null;
+  subtitle?: string | null;
+  description?: string | null;
+  skills: {
+    name: string;
+    level?: ('beginner' | 'intermediate' | 'advanced' | 'expert') | null;
+    percentage?: number | null;
+    icon?: (string | null) | Media;
+    category?: ('frontend' | 'backend' | 'database' | 'devops' | 'design' | 'mobile' | 'other') | null;
+    color?: ('blue' | 'purple' | 'green' | 'orange' | 'red' | 'pink' | 'teal' | 'indigo') | null;
+    id?: string | null;
+  }[];
+  displayStyle?: ('grid' | 'progress' | 'circular' | 'chart' | 'cardSwap') | null;
+  animationStyle?: ('fadeIn' | 'slideUp' | 'scale' | 'stagger') | null;
+  showParticles?: boolean | null;
+  backgroundImage?: (string | null) | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'skills';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ExperienceBlock".
+ */
+export interface ExperienceBlock {
+  /**
+   * Unique ID for this section (anchor links, e.g. #services).
+   */
+  anchorId?: string | null;
+  title: string;
+  /**
+   * Badge mono affiché au-dessus du titre (ex: // 02 — experience)
+   */
+  codeLabel?: string | null;
+  subtitle?: string | null;
+  description?: string | null;
+  experiences: {
+    type: 'work' | 'education' | 'freelance' | 'volunteer' | 'certification';
+    title: string;
+    organization: string;
+    location?: string | null;
+    description?: string | null;
+    highlights?:
+      | {
+          text: string;
+          id?: string | null;
+        }[]
+      | null;
+    technologies?:
+      | {
+          name: string;
+          color?: ('blue' | 'purple' | 'green' | 'orange' | 'red' | 'pink' | 'teal' | 'indigo') | null;
+          id?: string | null;
+        }[]
+      | null;
+    startDate: string;
+    endDate?: string | null;
+    current?: boolean | null;
+    logo?: (string | null) | Media;
+    website?: string | null;
+    id?: string | null;
+  }[];
+  layout?: ('vertical' | 'horizontal' | 'alternating' | 'compact') | null;
+  animationStyle?: ('fadeIn' | 'slideUp' | 'reveal') | null;
+  showParticles?: boolean | null;
+  backgroundImage?: (string | null) | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'experience';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ProjectsBlock".
+ */
+export interface ProjectsBlock {
+  /**
+   * Unique ID for this section (anchor links, e.g. #services).
+   */
+  anchorId?: string | null;
+  title: string;
+  /**
+   * Badge mono affiché au-dessus du titre (ex: // 03 — projets)
+   */
+  codeLabel?: string | null;
+  subtitle?: string | null;
+  description?: string | null;
+  projects: {
+    title: string;
+    /**
+     * URL-friendly identifier (auto-generated from title if empty)
+     */
+    slug?: string | null;
+    description: string;
+    longDescription?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    thumbnail?: (string | null) | Media;
+    images?:
+      | {
+          image: string | Media;
+          alt?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+    technologies?:
+      | {
+          name: string;
+          icon?: (string | null) | Media;
+          color?: ('blue' | 'purple' | 'green' | 'orange' | 'red' | 'pink' | 'teal' | 'indigo' | 'yellow') | null;
+          id?: string | null;
+        }[]
+      | null;
+    links?: {
+      liveUrl?: string | null;
+      githubUrl?: string | null;
+      caseStudyUrl?: string | null;
+    };
+    featured?: boolean | null;
+    category?: ('webapp' | 'mobile' | 'api' | 'cli' | 'library' | 'design-system' | 'open-source' | 'other') | null;
+    startDate?: string | null;
+    endDate?: string | null;
+    status?: ('in-progress' | 'completed' | 'maintained' | 'archived') | null;
+    id?: string | null;
+  }[];
+  displayStyle?: ('grid' | 'masonry' | 'carousel' | 'list') | null;
+  showFilters?: boolean | null;
+  itemsPerRow?: ('1' | '2' | '3' | '4') | null;
+  animationStyle?: ('fadeIn' | 'slideUp' | 'scale' | 'stagger') | null;
+  showParticles?: boolean | null;
+  backgroundImage?: (string | null) | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'projects';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TestimonialsBlock".
+ */
+export interface TestimonialsBlock {
+  /**
+   * Unique ID for this section (anchor links, e.g. #services).
+   */
+  anchorId?: string | null;
+  title: string;
+  subtitle?: string | null;
+  description?: string | null;
+  testimonials: {
+    quote: string;
+    authorName: string;
+    authorTitle?: string | null;
+    authorOrganization?: string | null;
+    authorAvatar?: (string | null) | Media;
+    rating?: number | null;
+    featured?: boolean | null;
+    id?: string | null;
+  }[];
+  displayStyle?: ('carousel' | 'grid' | 'masonry' | 'single') | null;
+  autoplaySpeed?: number | null;
+  animationStyle?: ('fadeIn' | 'slideUp' | 'scale') | null;
+  showParticles?: boolean | null;
+  backgroundImage?: (string | null) | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'testimonials';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContactFormBlock".
+ */
+export interface ContactFormBlock {
+  /**
+   * Unique ID for this section (anchor links, e.g. #services).
+   */
+  anchorId?: string | null;
+  title: string;
+  subtitle?: string | null;
+  description?: string | null;
+  successMessage?: string | null;
+  buttonText?: string | null;
+  email?: string | null;
+  phone?: string | null;
+  socialLinks?:
+    | {
+        label: string;
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  showParticles?: boolean | null;
+  backgroundImage?: (string | null) | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'contactForm';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FormationBlock".
+ */
+export interface FormationBlock {
+  /**
+   * Unique ID for this section (anchor links, e.g. #services).
+   */
+  anchorId?: string | null;
+  title: string;
+  subtitle?: string | null;
+  description?: string | null;
+  items: {
+    title: string;
+    organization?: string | null;
+    date?: string | null;
+    icon?: (string | null) | Media;
+    accent?: ('#7c3aed' | '#fbbf24' | '#f9a8d4' | '#34d399' | '#60a5fa') | null;
+    id?: string | null;
+  }[];
+  displayStyle?: ('grid' | 'list') | null;
+  animationStyle?: ('fadeIn' | 'slideUp' | 'scale') | null;
+  showParticles?: boolean | null;
+  backgroundImage?: (string | null) | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'formation';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StatsBlock".
+ */
+export interface StatsBlock {
+  /**
+   * Unique ID for this section (anchor links, e.g. #services).
+   */
+  anchorId?: string | null;
+  title?: string | null;
+  subtitle?: string | null;
+  stats: {
+    value: string;
+    label: string;
+    id?: string | null;
+  }[];
+  columns?: ('3' | '4' | '6') | null;
+  showParticles?: boolean | null;
+  backgroundImage?: (string | null) | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'stats';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SimpleFooterBlock".
+ */
+export interface SimpleFooterBlock {
+  /**
+   * Unique ID for this section (anchor links, e.g. #services).
+   */
+  anchorId?: string | null;
+  title?: string | null;
+  tagline?: string | null;
+  socialLinks?:
+    | {
+        platform?: ('github' | 'linkedin' | 'twitter' | 'portfolio' | 'email') | null;
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  links?:
+    | {
+        label: string;
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  copyright?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'simpleFooter';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contacts".
+ */
+export interface Contact {
+  id: string;
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+  read?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1133,6 +1486,10 @@ export interface PayloadLockedDocument {
         value: string | User;
       } | null)
     | ({
+        relationTo: 'contacts';
+        value: string | Contact;
+      } | null)
+    | ({
         relationTo: 'redirects';
         value: string | Redirect;
       } | null)
@@ -1228,6 +1585,14 @@ export interface PagesSelect<T extends boolean = true> {
         formBlock?: T | FormBlockSelect<T>;
         developerPortfolio?: T | DeveloperPortfolioBlockSelect<T>;
         headerBlock?: T | HeaderBlockPropsSelect<T>;
+        skills?: T | SkillsBlockSelect<T>;
+        experience?: T | ExperienceBlockSelect<T>;
+        projects?: T | ProjectsBlockSelect<T>;
+        testimonials?: T | TestimonialsBlockSelect<T>;
+        contactForm?: T | ContactFormBlockSelect<T>;
+        formation?: T | FormationBlockSelect<T>;
+        stats?: T | StatsBlockSelect<T>;
+        simpleFooter?: T | SimpleFooterBlockSelect<T>;
       };
   meta?:
     | T
@@ -1248,6 +1613,7 @@ export interface PagesSelect<T extends boolean = true> {
  * via the `definition` "CallToActionBlock_select".
  */
 export interface CallToActionBlockSelect<T extends boolean = true> {
+  anchorId?: T;
   richText?: T;
   links?:
     | T
@@ -1272,6 +1638,7 @@ export interface CallToActionBlockSelect<T extends boolean = true> {
  * via the `definition` "ContentBlock_select".
  */
 export interface ContentBlockSelect<T extends boolean = true> {
+  anchorId?: T;
   columns?:
     | T
     | {
@@ -1298,6 +1665,7 @@ export interface ContentBlockSelect<T extends boolean = true> {
  * via the `definition` "MediaBlock_select".
  */
 export interface MediaBlockSelect<T extends boolean = true> {
+  anchorId?: T;
   media?: T;
   id?: T;
   blockName?: T;
@@ -1307,6 +1675,7 @@ export interface MediaBlockSelect<T extends boolean = true> {
  * via the `definition` "ArchiveBlock_select".
  */
 export interface ArchiveBlockSelect<T extends boolean = true> {
+  anchorId?: T;
   introContent?: T;
   populateBy?: T;
   relationTo?: T;
@@ -1321,6 +1690,7 @@ export interface ArchiveBlockSelect<T extends boolean = true> {
  * via the `definition` "FormBlock_select".
  */
 export interface FormBlockSelect<T extends boolean = true> {
+  anchorId?: T;
   form?: T;
   enableIntro?: T;
   introContent?: T;
@@ -1332,6 +1702,7 @@ export interface FormBlockSelect<T extends boolean = true> {
  * via the `definition` "DeveloperPortfolioBlock_select".
  */
 export interface DeveloperPortfolioBlockSelect<T extends boolean = true> {
+  anchorId?: T;
   name?: T;
   title?: T;
   description?: T;
@@ -1342,6 +1713,30 @@ export interface DeveloperPortfolioBlockSelect<T extends boolean = true> {
     | {
         platform?: T;
         url?: T;
+        id?: T;
+      };
+  statusBadge?: T;
+  location?: T;
+  codeCard?:
+    | T
+    | {
+        title?: T;
+        variableName?: T;
+        lines?:
+          | T
+          | {
+              key?: T;
+              value?: T;
+              color?: T;
+              id?: T;
+            };
+        footerText?: T;
+      };
+  stats?:
+    | T
+    | {
+        value?: T;
+        label?: T;
         id?: T;
       };
   animationStyle?: T;
@@ -1409,15 +1804,262 @@ export interface HeaderBlockPropsSelect<T extends boolean = true> {
               newTab?: T;
             };
       };
-  overrideConsultantButton?: T;
-  consultantButton?:
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SkillsBlock_select".
+ */
+export interface SkillsBlockSelect<T extends boolean = true> {
+  anchorId?: T;
+  title?: T;
+  codeLabel?: T;
+  subtitle?: T;
+  description?: T;
+  skills?:
+    | T
+    | {
+        name?: T;
+        level?: T;
+        percentage?: T;
+        icon?: T;
+        category?: T;
+        color?: T;
+        id?: T;
+      };
+  displayStyle?: T;
+  animationStyle?: T;
+  showParticles?: T;
+  backgroundImage?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ExperienceBlock_select".
+ */
+export interface ExperienceBlockSelect<T extends boolean = true> {
+  anchorId?: T;
+  title?: T;
+  codeLabel?: T;
+  subtitle?: T;
+  description?: T;
+  experiences?:
+    | T
+    | {
+        type?: T;
+        title?: T;
+        organization?: T;
+        location?: T;
+        description?: T;
+        highlights?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+            };
+        technologies?:
+          | T
+          | {
+              name?: T;
+              color?: T;
+              id?: T;
+            };
+        startDate?: T;
+        endDate?: T;
+        current?: T;
+        logo?: T;
+        website?: T;
+        id?: T;
+      };
+  layout?: T;
+  animationStyle?: T;
+  showParticles?: T;
+  backgroundImage?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ProjectsBlock_select".
+ */
+export interface ProjectsBlockSelect<T extends boolean = true> {
+  anchorId?: T;
+  title?: T;
+  codeLabel?: T;
+  subtitle?: T;
+  description?: T;
+  projects?:
+    | T
+    | {
+        title?: T;
+        slug?: T;
+        description?: T;
+        longDescription?: T;
+        thumbnail?: T;
+        images?:
+          | T
+          | {
+              image?: T;
+              alt?: T;
+              id?: T;
+            };
+        technologies?:
+          | T
+          | {
+              name?: T;
+              icon?: T;
+              color?: T;
+              id?: T;
+            };
+        links?:
+          | T
+          | {
+              liveUrl?: T;
+              githubUrl?: T;
+              caseStudyUrl?: T;
+            };
+        featured?: T;
+        category?: T;
+        startDate?: T;
+        endDate?: T;
+        status?: T;
+        id?: T;
+      };
+  displayStyle?: T;
+  showFilters?: T;
+  itemsPerRow?: T;
+  animationStyle?: T;
+  showParticles?: T;
+  backgroundImage?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TestimonialsBlock_select".
+ */
+export interface TestimonialsBlockSelect<T extends boolean = true> {
+  anchorId?: T;
+  title?: T;
+  subtitle?: T;
+  description?: T;
+  testimonials?:
+    | T
+    | {
+        quote?: T;
+        authorName?: T;
+        authorTitle?: T;
+        authorOrganization?: T;
+        authorAvatar?: T;
+        rating?: T;
+        featured?: T;
+        id?: T;
+      };
+  displayStyle?: T;
+  autoplaySpeed?: T;
+  animationStyle?: T;
+  showParticles?: T;
+  backgroundImage?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContactFormBlock_select".
+ */
+export interface ContactFormBlockSelect<T extends boolean = true> {
+  anchorId?: T;
+  title?: T;
+  subtitle?: T;
+  description?: T;
+  successMessage?: T;
+  buttonText?: T;
+  email?: T;
+  phone?: T;
+  socialLinks?:
     | T
     | {
         label?: T;
-        linkType?: T;
-        reference?: T;
-        href?: T;
+        url?: T;
+        id?: T;
       };
+  showParticles?: T;
+  backgroundImage?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FormationBlock_select".
+ */
+export interface FormationBlockSelect<T extends boolean = true> {
+  anchorId?: T;
+  title?: T;
+  subtitle?: T;
+  description?: T;
+  items?:
+    | T
+    | {
+        title?: T;
+        organization?: T;
+        date?: T;
+        icon?: T;
+        accent?: T;
+        id?: T;
+      };
+  displayStyle?: T;
+  animationStyle?: T;
+  showParticles?: T;
+  backgroundImage?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StatsBlock_select".
+ */
+export interface StatsBlockSelect<T extends boolean = true> {
+  anchorId?: T;
+  title?: T;
+  subtitle?: T;
+  stats?:
+    | T
+    | {
+        value?: T;
+        label?: T;
+        id?: T;
+      };
+  columns?: T;
+  showParticles?: T;
+  backgroundImage?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SimpleFooterBlock_select".
+ */
+export interface SimpleFooterBlockSelect<T extends boolean = true> {
+  anchorId?: T;
+  title?: T;
+  tagline?: T;
+  socialLinks?:
+    | T
+    | {
+        platform?: T;
+        url?: T;
+        id?: T;
+      };
+  links?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+        id?: T;
+      };
+  copyright?: T;
   id?: T;
   blockName?: T;
 }
@@ -1589,6 +2231,19 @@ export interface UsersSelect<T extends boolean = true> {
         createdAt?: T;
         expiresAt?: T;
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contacts_select".
+ */
+export interface ContactsSelect<T extends boolean = true> {
+  name?: T;
+  email?: T;
+  subject?: T;
+  message?: T;
+  read?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1955,57 +2610,8 @@ export interface Header {
       newTab?: boolean | null;
     };
   };
-  /**
-   * Ce bouton apparaît uniquement dans le menu mobile, en bas de la navigation.
-   */
-  consultantButton?: {
-    label?: string | null;
-    linkType?: ('reference' | 'custom') | null;
-    reference?:
-      | ({
-          relationTo: 'pages';
-          value: string | Page;
-        } | null)
-      | ({
-          relationTo: 'posts';
-          value: string | Post;
-        } | null);
-    href?: string | null;
-  };
   createdBy?: (string | null) | User;
   updatedBy?: (string | null) | User;
-  updatedAt?: string | null;
-  createdAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "footer".
- */
-export interface Footer {
-  id: string;
-  navItems?:
-    | {
-        link?: {
-          type?: ('reference' | 'custom') | null;
-          reference?:
-            | ({
-                relationTo: 'pages';
-                value: string | Page;
-              } | null)
-            | ({
-                relationTo: 'posts';
-                value: string | Post;
-              } | null);
-          url?: string | null;
-          label?: string | null;
-          /**
-           * Check to open link in a new tab/window
-           */
-          newTab?: boolean | null;
-        };
-        id?: string | null;
-      }[]
-    | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -2068,39 +2674,8 @@ export interface HeaderSelect<T extends boolean = true> {
               newTab?: T;
             };
       };
-  consultantButton?:
-    | T
-    | {
-        label?: T;
-        linkType?: T;
-        reference?: T;
-        href?: T;
-      };
   createdBy?: T;
   updatedBy?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "footer_select".
- */
-export interface FooterSelect<T extends boolean = true> {
-  navItems?:
-    | T
-    | {
-        link?:
-          | T
-          | {
-              type?: T;
-              reference?: T;
-              url?: T;
-              label?: T;
-              newTab?: T;
-            };
-        id?: T;
-      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

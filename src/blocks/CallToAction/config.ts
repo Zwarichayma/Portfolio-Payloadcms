@@ -1,3 +1,5 @@
+import { anchorIdField } from '@/fields/anchorIdField'
+
 import type { Block } from 'payload'
 
 import {
@@ -13,6 +15,7 @@ export const CallToAction: Block = {
   slug: 'cta',
   interfaceName: 'CallToActionBlock',
   fields: [
+    anchorIdField('cta'),
     {
       name: 'richText',
       type: 'richText',

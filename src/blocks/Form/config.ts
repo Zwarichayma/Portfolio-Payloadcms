@@ -1,3 +1,5 @@
+import { anchorIdField } from '@/fields/anchorIdField'
+
 import type { Block } from 'payload'
 
 import {
@@ -11,6 +13,7 @@ export const FormBlock: Block = {
   slug: 'formBlock',
   interfaceName: 'FormBlock',
   fields: [
+    anchorIdField('formBlock'),
     {
       name: 'form',
       type: 'relationship',

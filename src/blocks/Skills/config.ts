@@ -1,0 +1,146 @@
+import { anchorIdField } from '@/fields/anchorIdField'
+
+import type { Block } from 'payload'
+
+export const Skills: Block = {
+  slug: 'skills',
+  interfaceName: 'SkillsBlock',
+  fields: [
+    anchorIdField('skills'),
+    {
+      name: 'title',
+      type: 'text',
+      required: true,
+      label: 'Section Title',
+      defaultValue: 'My Skills',
+    },
+    {
+      name: 'codeLabel',
+      type: 'text',
+      label: 'Code Label',
+      admin: {
+        description: 'Badge mono affiché au-dessus du titre (ex: // 04 — skills)',
+      },
+    },
+    {
+      name: 'subtitle',
+      type: 'text',
+      label: 'Subtitle',
+      defaultValue: 'Technologies I work with',
+    },
+    {
+      name: 'description',
+      type: 'textarea',
+      label: 'Description',
+    },
+    {
+      name: 'skills',
+      type: 'array',
+      label: 'Skills',
+      required: true,
+      minRows: 1,
+      fields: [
+        {
+          name: 'name',
+          type: 'text',
+          required: true,
+          label: 'Skill Name',
+        },
+        {
+          name: 'level',
+          type: 'select',
+          label: 'Proficiency Level',
+          options: [
+            { label: 'Beginner', value: 'beginner' },
+            { label: 'Intermediate', value: 'intermediate' },
+            { label: 'Advanced', value: 'advanced' },
+            { label: 'Expert', value: 'expert' },
+          ],
+          defaultValue: 'intermediate',
+        },
+        {
+          name: 'percentage',
+          type: 'number',
+          label: 'Proficiency Percentage',
+          min: 0,
+          max: 100,
+          defaultValue: 75,
+        },
+        {
+          name: 'icon',
+          type: 'upload',
+          relationTo: 'media',
+          label: 'Skill Icon',
+        },
+        {
+          name: 'category',
+          type: 'select',
+          label: 'Category',
+          options: [
+            { label: 'Frontend', value: 'frontend' },
+            { label: 'Backend', value: 'backend' },
+            { label: 'Database', value: 'database' },
+            { label: 'DevOps', value: 'devops' },
+            { label: 'Design', value: 'design' },
+            { label: 'Mobile', value: 'mobile' },
+            { label: 'Other', value: 'other' },
+          ],
+          defaultValue: 'other',
+        },
+        {
+          name: 'color',
+          type: 'select',
+          label: 'Color Theme',
+          options: [
+            { label: 'Blue', value: 'blue' },
+            { label: 'Purple', value: 'purple' },
+            { label: 'Green', value: 'green' },
+            { label: 'Orange', value: 'orange' },
+            { label: 'Red', value: 'red' },
+            { label: 'Pink', value: 'pink' },
+            { label: 'Teal', value: 'teal' },
+            { label: 'Indigo', value: 'indigo' },
+          ],
+          defaultValue: 'blue',
+        },
+      ],
+    },
+    {
+      name: 'displayStyle',
+      type: 'select',
+      label: 'Display Style',
+      options: [
+        { label: 'Grid Cards', value: 'grid' },
+        { label: 'Progress Bars', value: 'progress' },
+        { label: 'Circular Progress', value: 'circular' },
+        { label: 'Interactive Chart', value: 'chart' },
+        { label: 'Scroll Carousel', value: 'cardSwap' },
+      ],
+      defaultValue: 'grid',
+    },
+    {
+      name: 'animationStyle',
+      type: 'select',
+      label: 'Animation Style',
+      options: [
+        { label: 'Fade In', value: 'fadeIn' },
+        { label: 'Slide Up', value: 'slideUp' },
+        { label: 'Scale', value: 'scale' },
+        { label: 'Stagger', value: 'stagger' },
+      ],
+      defaultValue: 'fadeIn',
+    },
+    {
+      name: 'showParticles',
+      type: 'checkbox',
+      label: 'Show Particle Animation',
+      defaultValue: false,
+    },
+    {
+      name: 'backgroundImage',
+      type: 'upload',
+      relationTo: 'media',
+      label: 'Background Image',
+    },
+  ],
+}
