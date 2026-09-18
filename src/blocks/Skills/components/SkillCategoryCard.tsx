@@ -8,22 +8,18 @@ import type { SkillsBlock } from '@/payload-types'
 type Skill = NonNullable<SkillsBlock['skills']>[0]
 
 const CATEGORY_LABELS: Record<string, string> = {
-  frontend: 'Languages',
-  backend: 'Frameworks',
-  database: 'Databases',
+  languages: 'Languages',
+  frameworks: 'Frameworks',
+  databases: 'Databases',
   devops: 'DevOps / Tools',
-  design: 'Design',
-  mobile: 'Mobile',
   other: 'Other',
 }
 
 const CATEGORY_COLORS: Record<string, string> = {
-  frontend: '#a78bfa',
-  backend: '#7c3aed',
-  database: '#c4b5fd',
+  languages: '#a78bfa',
+  frameworks: '#7c3aed',
+  databases: '#c4b5fd',
   devops: '#8b5cf6',
-  design: '#d8b4fe',
-  mobile: '#818cf8',
   other: '#a78bfa',
 }
 

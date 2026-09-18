@@ -991,7 +991,11 @@ export interface SkillsBlock {
     level?: ('beginner' | 'intermediate' | 'advanced' | 'expert') | null;
     percentage?: number | null;
     icon?: (string | null) | Media;
-    category?: ('frontend' | 'backend' | 'database' | 'devops' | 'design' | 'mobile' | 'other') | null;
+    category?: ('languages' | 'frameworks' | 'databases' | 'devops' | 'other') | null;
+    /**
+     * Ex : AI, Mobile, Design… (sert de libellé ET de regroupement)
+     */
+    categoryOther?: string | null;
     color?: ('blue' | 'purple' | 'green' | 'orange' | 'red' | 'pink' | 'teal' | 'indigo') | null;
     id?: string | null;
   }[];
@@ -1867,6 +1871,7 @@ export interface SkillsBlockSelect<T extends boolean = true> {
         percentage?: T;
         icon?: T;
         category?: T;
+        categoryOther?: T;
         color?: T;
         id?: T;
       };

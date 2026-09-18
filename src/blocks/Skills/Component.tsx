@@ -39,6 +39,12 @@ const SkillsBlockComponent: React.FC<Props> = ({
     el.scrollBy({ left: (dir === 'left' ? -1 : 1) * el.clientWidth * 0.8, behavior: 'smooth' })
   }
 
+  // Group key: custom label when category is "other", otherwise the category value.
+  const getSkillCategoryKey = (skill: NonNullable<SkillsBlockType['skills']>[0]) =>
+    skill.category === 'other'
+      ? (skill.categoryOther || '').trim() || 'other'
+      : skill.category || 'other'
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -186,11 +192,11 @@ const SkillsBlockComponent: React.FC<Props> = ({
                   : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
             }`}
           >
-            {Array.from(new Set(skills.map((s) => s.category || 'other'))).map((category, ci) => (
+            {Array.from(new Set(skills.map((s) => getSkillCategoryKey(s)))).map((category, ci) => (
               <SkillCategoryCard
                 key={category}
                 category={category}
-                skills={skills.filter((s) => (s.category || 'other') === category)}
+                skills={skills.filter((s) => getSkillCategoryKey(s) === category)}
                 index={ci}
               />
             ))}
