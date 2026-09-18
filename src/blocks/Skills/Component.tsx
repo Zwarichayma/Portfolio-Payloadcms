@@ -1,7 +1,8 @@
 'use client'
 
-import React from 'react'
+import React, { useRef } from 'react'
 import { motion } from 'framer-motion'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import type { SkillsBlock as SkillsBlockType } from '@/payload-types'
 import { Media } from '@/components/Media'
 import { useTheme } from '@/providers/Theme'
@@ -28,6 +29,14 @@ const SkillsBlockComponent: React.FC<Props> = ({
   disableInnerContainer,
 }) => {
   const { theme } = useTheme()
+  const isDark = theme === 'dark'
+  const carouselRef = useRef<HTMLDivElement>(null)
+
+  const scrollCarousel = (dir: 'left' | 'right') => {
+    const el = carouselRef.current
+    if (!el) return
+    el.scrollBy({ left: (dir === 'left' ? -1 : 1) * el.clientWidth * 0.8, behavior: 'smooth' })
+  }
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -114,7 +123,7 @@ const SkillsBlockComponent: React.FC<Props> = ({
 
       <motion.div
         className={`relative z-10 ${
-          disableInnerContainer ? '' : 'container mx-auto px-6'
+          disableInnerContainer ? '' : 'max-w-4xl mx-auto px-6'
         }`}
         variants={containerVariants}
         initial="hidden"
@@ -163,8 +172,12 @@ const SkillsBlockComponent: React.FC<Props> = ({
         </div>
 
         {/* Skills Display — category cards with skill bars (reference design) */}
-        {skills && skills.length > 0 && displayStyle === 'grid' && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {skills && skills.length > 0 && (displayStyle === 'grid' || displayStyle === 'grid4') && (
+          <div
+            className={`grid grid-cols-1 md:grid-cols-2 gap-4 ${
+              displayStyle === 'grid4' ? 'lg:grid-cols-4' : 'lg:grid-cols-3'
+            }`}
+          >
             {Array.from(new Set(skills.map((s) => s.category || 'other'))).map((category, ci) => (
               <SkillCategoryCard
                 key={category}
@@ -211,13 +224,46 @@ const SkillsBlockComponent: React.FC<Props> = ({
               `pt-3`/`pb-6` (instead of just `pb-4`) give that vertical movement room on
               both edges so it never gets clipped by the now-implicit `overflow-y: auto`.
             */}
-            <div className="flex gap-6 overflow-x-auto pt-3 pb-6 px-1 snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <div
+              ref={carouselRef}
+              className="flex gap-6 overflow-x-auto pt-3 pb-6 px-1 snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            >
               {skills.map((skill, index) => (
                 <div key={index} className="snap-start">
                   <SkillCard skill={skill} variant="landscape" />
                 </div>
               ))}
             </div>
+
+            {/* Arrows */}
+            <button
+              type="button"
+              onClick={() => scrollCarousel('left')}
+              aria-label="Précédent"
+              className="absolute left-1 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border transition-colors duration-200 hover:border-[#7c3aed]"
+              style={{
+                background: isDark ? 'rgba(23,20,42,0.85)' : 'rgba(255,255,255,0.9)',
+                borderColor: 'rgba(139,92,246,0.3)',
+                color: '#a78bfa',
+                backdropFilter: 'blur(10px)',
+              }}
+            >
+              <ChevronLeft size={20} />
+            </button>
+            <button
+              type="button"
+              onClick={() => scrollCarousel('right')}
+              aria-label="Suivant"
+              className="absolute right-1 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border transition-colors duration-200 hover:border-[#7c3aed]"
+              style={{
+                background: isDark ? 'rgba(23,20,42,0.85)' : 'rgba(255,255,255,0.9)',
+                borderColor: 'rgba(139,92,246,0.3)',
+                color: '#a78bfa',
+                backdropFilter: 'blur(10px)',
+              }}
+            >
+              <ChevronRight size={20} />
+            </button>
           </motion.div>
         )}
 

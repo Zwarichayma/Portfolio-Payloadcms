@@ -78,17 +78,6 @@ export default function NotFound() {
             </svg>
             Retour à l&apos;accueil
           </Link>
-
-          <Link
-            href="/posts"
-            className="inline-flex items-center gap-2 rounded-lg border px-6 py-3 text-sm font-medium transition-colors duration-300"
-            style={{
-              borderColor: 'rgba(139,92,246,0.35)',
-              color: 'var(--portfolio-text-secondary)',
-            }}
-          >
-            Voir le blog
-          </Link>
         </div>
       </div>
     </div>
