@@ -11,6 +11,7 @@ import { SkillCategoryCard } from './components/SkillCategoryCard'
 import { ProgressBar } from './components/ProgressBar'
 import { CircularProgress } from './components/CircularProgress'
 import { ParticleBackground } from './components/ParticleBackground'
+import { Starfield } from '@/components/custom/Starfield'
 
 type Props = {
   disableInnerContainer?: boolean
@@ -26,7 +27,7 @@ const SkillsBlockComponent: React.FC<Props> = ({
   animationStyle,
   showParticles,
   backgroundImage,
-  disableInnerContainer,
+  disableInnerContainer: _disableInnerContainer,
 }) => {
   const { theme } = useTheme()
   const isDark = theme === 'dark'
@@ -113,8 +114,11 @@ const SkillsBlockComponent: React.FC<Props> = ({
         backgroundColor: theme === 'dark' ? '#0c0a14' : '#fbfaff',
       }}
     >
-      {showParticles && <ParticleBackground />}
+      {/* Starfield background (reference design) */}
+      <Starfield />
 
+      {showParticles && <ParticleBackground />}
+      
       {backgroundImage && (
         <div className="absolute inset-0 opacity-10 dark:opacity-5">
           <Media resource={backgroundImage} className="w-full h-full object-cover" />
@@ -122,9 +126,7 @@ const SkillsBlockComponent: React.FC<Props> = ({
       )}
 
       <motion.div
-        className={`relative z-10 ${
-          disableInnerContainer ? '' : 'max-w-4xl mx-auto px-6'
-        }`}
+        className="relative z-10 mx-auto max-w-4xl px-6"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
@@ -172,10 +174,16 @@ const SkillsBlockComponent: React.FC<Props> = ({
         </div>
 
         {/* Skills Display — category cards with skill bars (reference design) */}
-        {skills && skills.length > 0 && (displayStyle === 'grid' || displayStyle === 'grid4') && (
+        {skills &&
+          skills.length > 0 &&
+          (displayStyle === 'grid' || displayStyle === 'grid2' || displayStyle === 'grid4') && (
           <div
-            className={`grid grid-cols-1 md:grid-cols-2 gap-4 ${
-              displayStyle === 'grid4' ? 'lg:grid-cols-4' : 'lg:grid-cols-3'
+            className={`grid gap-4 ${
+              displayStyle === 'grid4'
+                ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4'
+                : displayStyle === 'grid2'
+                  ? 'grid-cols-1 md:grid-cols-2'
+                  : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
             }`}
           >
             {Array.from(new Set(skills.map((s) => s.category || 'other'))).map((category, ci) => (
@@ -226,7 +234,7 @@ const SkillsBlockComponent: React.FC<Props> = ({
             */}
             <div
               ref={carouselRef}
-              className="flex gap-6 overflow-x-auto pt-3 pb-6 px-1 snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+              className="mx-12 flex gap-6 overflow-x-auto pt-3 pb-6 snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             >
               {skills.map((skill, index) => (
                 <div key={index} className="snap-start">
@@ -235,12 +243,12 @@ const SkillsBlockComponent: React.FC<Props> = ({
               ))}
             </div>
 
-            {/* Arrows */}
+            {/* Arrows on the sides (in the side margins) */}
             <button
               type="button"
               onClick={() => scrollCarousel('left')}
               aria-label="Précédent"
-              className="absolute left-1 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border transition-colors duration-200 hover:border-[#7c3aed]"
+              className="absolute left-0 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border transition-colors duration-200 hover:border-[#7c3aed]"
               style={{
                 background: isDark ? 'rgba(23,20,42,0.85)' : 'rgba(255,255,255,0.9)',
                 borderColor: 'rgba(139,92,246,0.3)',
@@ -254,7 +262,7 @@ const SkillsBlockComponent: React.FC<Props> = ({
               type="button"
               onClick={() => scrollCarousel('right')}
               aria-label="Suivant"
-              className="absolute right-1 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border transition-colors duration-200 hover:border-[#7c3aed]"
+              className="absolute right-0 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border transition-colors duration-200 hover:border-[#7c3aed]"
               style={{
                 background: isDark ? 'rgba(23,20,42,0.85)' : 'rgba(255,255,255,0.9)',
                 borderColor: 'rgba(139,92,246,0.3)',

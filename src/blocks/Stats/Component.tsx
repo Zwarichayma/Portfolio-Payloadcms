@@ -6,6 +6,7 @@ import type { StatsBlock as StatsBlockType } from '@/payload-types'
 import { Media } from '@/components/Media'
 import { useTheme } from '@/providers/Theme'
 import { Particles } from '@/components/custom/Particles'
+import { Starfield } from '@/components/custom/Starfield'
 import { LiquidEtherBackground } from '@/components/custom/LiquidEtherBackground'
 import { SectionLabel } from '@/components/custom/SectionLabel'
 
@@ -55,6 +56,8 @@ const StatsBlockComponent: React.FC<Props> = ({
       className="relative py-16 md:py-24 overflow-hidden will-change-transform"
       style={{ backgroundColor: isDark ? '#0c0a14' : '#fbfaff' }}
     >
+      <Starfield />
+
       {showParticles && <Particles count={15} />}
 
       {backgroundImage && (

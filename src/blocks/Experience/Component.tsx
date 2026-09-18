@@ -7,6 +7,7 @@ import type { ExperienceBlock as ExperienceBlockType } from '@/payload-types'
 import { Media } from '@/components/Media'
 import { useTheme } from '@/providers/Theme'
 import { Particles } from '@/components/custom/Particles'
+import { Starfield } from '@/components/custom/Starfield'
 
 type Props = {
   disableInnerContainer?: boolean
@@ -119,6 +120,8 @@ const ExperienceBlockComponent: React.FC<Props> = ({
       className="relative py-16 md:py-24 overflow-hidden will-change-transform"
       style={{ backgroundColor: isDark ? '#0c0a14' : '#fbfaff' }}
     >
+      <Starfield />
+
       {showParticles && <Particles count={20} />}
 
       {backgroundImage && (

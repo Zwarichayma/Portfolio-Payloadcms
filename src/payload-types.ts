@@ -995,7 +995,7 @@ export interface SkillsBlock {
     color?: ('blue' | 'purple' | 'green' | 'orange' | 'red' | 'pink' | 'teal' | 'indigo') | null;
     id?: string | null;
   }[];
-  displayStyle?: ('grid' | 'grid4' | 'progress' | 'circular' | 'chart' | 'cardSwap') | null;
+  displayStyle?: ('grid2' | 'grid' | 'grid4' | 'progress' | 'circular' | 'chart' | 'cardSwap') | null;
   animationStyle?: ('fadeIn' | 'slideUp' | 'scale' | 'stagger') | null;
   showParticles?: boolean | null;
   backgroundImage?: (string | null) | Media;

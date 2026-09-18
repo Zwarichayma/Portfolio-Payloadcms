@@ -6,6 +6,7 @@ import type { DeveloperPortfolioBlock as DeveloperPortfolioBlockType } from '@/p
 import { Media } from '@/components/Media'
 import { useTheme } from '@/providers/Theme'
 import { LiquidEtherBackground } from '@/components/custom/LiquidEtherBackground'
+import { Starfield } from '@/components/custom/Starfield'
 import {
   TypewriterText,
   ParticleBackground,
@@ -125,6 +126,8 @@ const DeveloperPortfolioBlockComponent: React.FC<Props> = ({
       className="relative min-h-screen overflow-hidden will-change-transform flex items-center justify-center pt-40 pb-24 lg:pt-28 lg:pb-16"
       style={{ backgroundColor: isDark ? '#0c0a14' : '#fbfaff' }}
     >
+      <Starfield />
+
       {showParticles && <ParticleBackground />}
 
       {backgroundImage && (

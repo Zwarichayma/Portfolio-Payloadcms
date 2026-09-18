@@ -125,6 +125,7 @@ export const Skills: Block = {
       type: 'select',
       label: 'Display Style',
       options: [
+        { label: 'Grid Cards (2 columns)', value: 'grid2' },
         { label: 'Grid Cards (3 columns)', value: 'grid' },
         { label: 'Grid Cards (4 columns)', value: 'grid4' },
         { label: 'Progress Bars', value: 'progress' },
