@@ -859,6 +859,10 @@ export interface HeaderBlockProps {
    */
   anchorId?: string | null;
   /**
+   * Coché : affiche le logo dans le header. Décoché (ou logo vide) : le logo est masqué et les menus sont centrés.
+   */
+  showLogo?: boolean | null;
+  /**
    * Coché : Utilise un logo spécifique pour cette page. ☐ Décoché : Utilise le logo du header global par défaut.
    */
   overrideLogo?: boolean | null;
@@ -1105,7 +1109,21 @@ export interface ProjectsBlock {
       caseStudyUrl?: string | null;
     };
     featured?: boolean | null;
-    category?: ('webapp' | 'mobile' | 'api' | 'cli' | 'library' | 'design-system' | 'open-source' | 'other') | null;
+    category?:
+      | (
+          | 'website'
+          | 'webapp'
+          | 'plugin'
+          | 'production'
+          | 'mobile'
+          | 'api'
+          | 'cli'
+          | 'library'
+          | 'design-system'
+          | 'open-source'
+          | 'other'
+        )
+      | null;
     startDate?: string | null;
     endDate?: string | null;
     status?: ('in-progress' | 'completed' | 'maintained' | 'archived') | null;
@@ -1768,6 +1786,7 @@ export interface DeveloperPortfolioBlockSelect<T extends boolean = true> {
  */
 export interface HeaderBlockPropsSelect<T extends boolean = true> {
   anchorId?: T;
+  showLogo?: T;
   overrideLogo?: T;
   logo?: T;
   logoLink?:

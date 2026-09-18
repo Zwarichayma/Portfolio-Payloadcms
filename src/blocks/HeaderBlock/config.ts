@@ -26,6 +26,16 @@ export const HeaderBlock: Block = {
       },
     },
     {
+      name: 'showLogo',
+      type: 'checkbox',
+      label: 'Afficher le logo',
+      defaultValue: true,
+      admin: {
+        description:
+          'Coché : affiche le logo dans le header. Décoché (ou logo vide) : le logo est masqué et les menus sont centrés.',
+      },
+    },
+    {
       name: 'overrideLogo',
       type: 'checkbox',
       label: 'Redéfinir le logo',

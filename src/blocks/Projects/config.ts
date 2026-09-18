@@ -158,7 +158,10 @@ export const Projects: Block = {
           type: 'select',
           label: 'Category',
           options: [
+            { label: 'Web Site', value: 'website' },
             { label: 'Web App', value: 'webapp' },
+            { label: 'Plugin', value: 'plugin' },
+            { label: 'Production', value: 'production' },
             { label: 'Mobile App', value: 'mobile' },
             { label: 'API', value: 'api' },
             { label: 'CLI Tool', value: 'cli' },
@@ -167,7 +170,7 @@ export const Projects: Block = {
             { label: 'Open Source', value: 'open-source' },
             { label: 'Other', value: 'other' },
           ],
-          defaultValue: 'webapp',
+          defaultValue: 'website',
         },
         {
           name: 'startDate',

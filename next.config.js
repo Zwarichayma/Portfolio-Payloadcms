@@ -27,7 +27,7 @@ const nextConfig = {
   // Bundle the local media folder into the serverless functions so the local
   // `/api/media/file/...` route keeps working on Vercel for media not yet on Blob.
   outputFileTracingIncludes: {
-    '/api/[...slug]': ['./media/**/*'],
+    '/**': ['./media/**/*'],
   },
   poweredByHeader: false,
   images: {
@@ -42,6 +42,7 @@ const nextConfig = {
       }),
       // Vercel Blob storage (media uploads in production)
       { protocol: 'https', hostname: '*.public.blob.vercel-storage.com' },
+      { protocol: 'https', hostname: 'omupnkxyqbljo8rj.public.blob.vercel-storage.com' },
     ],
   },
   webpack: (webpackConfig) => {

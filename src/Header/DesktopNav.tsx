@@ -8,6 +8,7 @@ import { cn } from '@/utilities/ui'
 import { useTheme } from '@/providers/Theme'
 import Image from 'next/image'
 import NextLink from 'next/link'
+import { usePathname } from 'next/navigation'
 import React, { useRef, useState } from 'react'
 
 interface DesktopNavProps {
@@ -16,6 +17,7 @@ interface DesktopNavProps {
 
 export const DesktopNav: React.FC<DesktopNavProps> = ({ menus }) => {
   const [openMenu, setOpenMenu] = useState<string | null>(null)
+  const pathname = usePathname()
 
   if (!menus || menus.length === 0) return null
 
@@ -43,6 +45,7 @@ export const DesktopNav: React.FC<DesktopNavProps> = ({ menus }) => {
             openMenu={openMenu}
             setOpenMenu={setOpenMenu}
             menuIndex={index}
+            pathname={pathname}
           />
         )
       })}
@@ -60,6 +63,7 @@ const DesktopMenuItem: React.FC<{
   openMenu: string | null
   setOpenMenu: (menu: string | null) => void
   menuIndex: number
+  pathname: string | null
 }> = ({
   title,
   linkType = 'none',
@@ -70,6 +74,7 @@ const DesktopMenuItem: React.FC<{
   openMenu,
   setOpenMenu,
   menuIndex,
+  pathname,
 }) => {
   const menuItemRef = useRef<HTMLDivElement>(null)
   const uniqueMenuKey = `menu-${menuIndex}`
@@ -150,6 +155,11 @@ const DesktopMenuItem: React.FC<{
     }),
   )
 
+  // Item actif : lien direct correspondant, ou l'un des items du dropdown
+  const isActive = menuLinkUrl
+    ? menuLinkUrl === pathname
+    : dropdownItems.some((item) => item.href && item.href === pathname)
+
   // Calcul dynamique des colonnes : 3 items maximum par colonne
   const columnsCount = Math.ceil(dropdownItems.length / 3)
   const columns: Array<
@@ -184,20 +194,27 @@ const DesktopMenuItem: React.FC<{
         newTab={false}
         className={cn(
           'group flex flex-row items-center px-24 py-16 gap-7 cursor-pointer h-[2.375rem] relative rounded-lg transition-all duration-200',
-          'hover:bg-gray-100 dark:hover:bg-gray-700',
+          '',
         )}
       >
-        <CustomText
-          variant="small"
-          font="bricolage"
-          fontWeight="medium"
-          tracking="standard"
-          color="secondary"
-          customColor={itemTextColor}
-          className="whitespace-nowrap dark:text-gray-200"
-        >
-          {title}
-        </CustomText>
+        <span className="relative inline-block">
+          <CustomText
+            as="span"
+            variant="small"
+            font="bricolage"
+            fontWeight="medium"
+            tracking="standard"
+            color="secondary"
+            customColor={itemTextColor}
+            className="whitespace-nowrap dark:text-gray-200"
+          >
+            {title}
+          </CustomText>
+          <span
+            className="absolute left-0 -bottom-1 h-[2px] rounded-full bg-[#7c3aed] transition-all duration-300"
+            style={{ width: isActive ? '100%' : '0%' }}
+          />
+        </span>
       </CustomLink>
     )
   }
@@ -208,7 +225,7 @@ const DesktopMenuItem: React.FC<{
       ref={menuItemRef}
       className={cn(
         'group flex flex-row items-center px-24 py-16 gap-7 cursor-pointer h-[2.375rem] relative rounded-lg transition-all duration-200',
-        'hover:bg-gray-100 dark:hover:bg-gray-700',
+        '',
         isOpen && items && items.length > 0 ? 'bg-gray-100 dark:bg-gray-700' : '',
       )}
       style={isOpen ? { backgroundColor: triggerActiveBg } : undefined}
@@ -220,17 +237,24 @@ const DesktopMenuItem: React.FC<{
       }}
       onClick={handleMenuClick}
     >
-      <CustomText
-        variant="small"
-        font="bricolage"
-        fontWeight="medium"
-        tracking="standard"
-        color="secondary"
-        customColor={itemTextColor}
-        className="whitespace-nowrap dark:text-gray-200"
-      >
-        {title}
-      </CustomText>
+      <span className="relative inline-block">
+        <CustomText
+          as="span"
+          variant="small"
+          font="bricolage"
+          fontWeight="medium"
+          tracking="standard"
+          color="secondary"
+          customColor={itemTextColor}
+          className="whitespace-nowrap dark:text-gray-200"
+        >
+          {title}
+        </CustomText>
+        <span
+          className="absolute left-0 -bottom-1 h-[2px] rounded-full bg-[#7c3aed] transition-all duration-300"
+          style={{ width: isActive ? '100%' : '0%' }}
+        />
+      </span>
       {items && items.length > 0 && (
         <>
           <Image

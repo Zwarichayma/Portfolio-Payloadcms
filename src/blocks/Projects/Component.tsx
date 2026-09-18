@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useMemo, useRef } from 'react'
+import React, { useMemo, useRef } from 'react'
 import { motion, AnimatePresence, useScroll, useTransform, type Variants } from 'framer-motion'
 import type { ProjectsBlock as ProjectsBlockType } from '@/payload-types'
 import { Media } from '@/components/Media'
@@ -9,6 +9,38 @@ import { Particles } from '@/components/custom/Particles'
 import { LiquidEtherBackground } from '@/components/custom/LiquidEtherBackground'
 
 type Skill = NonNullable<ProjectsBlockType['projects']>[0]
+
+const CATEGORY_LABELS: Record<string, string> = {
+  website: 'Web Site',
+  webapp: 'Web App',
+  plugin: 'Plugin',
+  production: 'Production',
+  mobile: 'Mobile App',
+  api: 'API',
+  cli: 'CLI Tool',
+  library: 'Library',
+  'design-system': 'Design System',
+  'open-source': 'Open Source',
+  other: 'Other',
+}
+
+const formatCategory = (category?: string | null): string =>
+  category
+    ? CATEGORY_LABELS[category] ||
+      category.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())
+    : ''
+
+const getDisplayUrl = (url?: string | null): string => {
+  if (!url) return ''
+  try {
+    const { hostname, pathname } = new URL(url)
+    const host = hostname.replace(/^www\./, '')
+    const path = pathname === '/' ? '' : pathname
+    return `${host}${path}`
+  } catch {
+    return url.replace(/^https?:\/\//, '').replace(/^www\./, '')
+  }
+}
 
 interface ProjectCardProps {
   project: Skill
@@ -20,154 +52,154 @@ const easePro = [0.19, 1, 0.22, 1] as const
 
 const ProjectCard: React.FC<ProjectCardProps> = ({ project, getTechColor, isDark }) => {
   const cardRef = useRef<HTMLDivElement>(null)
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!cardRef.current) return
-    const rect = cardRef.current.getBoundingClientRect()
-    setMousePos({
-      x: ((e.clientX - rect.left) / rect.width) * 100,
-      y: ((e.clientY - rect.top) / rect.height) * 100,
-    })
-  }
+  const primaryUrl = project.links?.liveUrl || project.links?.githubUrl
+  const displayUrl = getDisplayUrl(project.links?.liveUrl)
 
   return (
     <motion.div
       ref={cardRef}
-      className="group relative isolate overflow-hidden rounded-2xl will-change-transform flex flex-col"
+      className="group relative isolate overflow-hidden rounded-2xl will-change-transform flex flex-col p-6"
       style={{
-        backgroundColor: isDark ? 'rgba(23,20,42,0.6)' : 'rgba(255,255,255,0.7)',
-        border: `1px solid ${isDark ? 'rgba(139,92,246,0.15)' : 'rgba(139,92,246,0.2)'}`,
-        backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter: 'blur(12px)',
+        backgroundColor: isDark ? '#12101c' : '#ffffff',
+        border: `1px solid ${isDark ? 'rgba(139,92,246,0.18)' : 'rgba(139,92,246,0.15)'}`,
         boxShadow: isDark
           ? '0 1px 2px 0 rgb(0 0 0 / 0.3), inset 0 1px 0 0 rgb(255 255 255 / 0.03)'
           : '0 1px 2px 0 rgb(0 0 0 / 0.03), inset 0 1px 0 0 rgb(255 255 255 / 0.8)',
         transition: 'transform 0.5s cubic-bezier(0.19, 1, 0.22, 1), box-shadow 0.5s cubic-bezier(0.19, 1, 0.22, 1)',
       }}
-      onMouseMove={handleMouseMove}
       whileHover={{
         y: -4,
         boxShadow: isDark
-          ? '0 20px 40px -12px rgb(0 0 0 / 0.5), 0 0 0 1px rgba(124,58,237,0.2), inset 0 1px 0 0 rgba(255,255,255,0.05)'
+          ? '0 20px 40px -12px rgb(0 0 0 / 0.5), 0 0 0 1px rgba(124,58,237,0.25), inset 0 1px 0 0 rgba(255,255,255,0.05)'
           : '0 20px 40px -12px rgb(0 0 0 / 0.08), 0 0 0 1px rgba(124,58,237,0.15), inset 0 1px 0 0 rgba(255,255,255,0.9)',
       }}
     >
       <LiquidEtherBackground />
 
-      <div
-        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 rounded-2xl"
-        style={{
-          background: isDark
-            ? `radial-gradient(600px circle at ${mousePos.x}% ${mousePos.y}%, rgba(124,58,237,0.06), transparent 60%)`
-            : `radial-gradient(600px circle at ${mousePos.x}% ${mousePos.y}%, rgba(124,58,237,0.04), transparent 60%)`,
-        }}
-      />
-
-      <div
-        className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-        style={{
-          background: isDark
-            ? 'linear-gradient(180deg, rgba(124,58,237,0.03) 0%, transparent 50%)'
-            : 'linear-gradient(180deg, rgba(124,58,237,0.02) 0%, transparent 50%)',
-        }}
-      />
-
-      {project.thumbnail && (
-        <div className="relative h-44 overflow-hidden flex-shrink-0 rounded-t-2xl">
-          <Media resource={project.thumbnail} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 will-change-transform" />
-          <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.4), transparent)' }} />
-          {project.featured && (
-            <span className="absolute top-3 right-3 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-amber-400/90 text-amber-950 backdrop-blur-sm">
-              Featured
-            </span>
-          )}
-          <span
-            className="absolute bottom-3 left-3 text-[10px] font-semibold px-2.5 py-1 rounded-full text-white backdrop-blur-sm"
-            style={{ backgroundColor: 'rgba(124,58,237,0.6)' }}
-          >
-            {project.category?.replace(/-/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()) || 'Project'}
-          </span>
-        </div>
-      )}
-
-      <div className="relative z-10 p-5 flex flex-col gap-3 flex-1">
-        {!project.thumbnail && (
-          <div className="flex items-center justify-between mb-1">
-            <span
-              className="text-[10px] font-semibold px-2.5 py-1 rounded-full text-white"
-              style={{ backgroundColor: 'rgba(124,58,237,0.6)' }}
+      {/* Header row: icon + title/url on the left, category badge + external link on the right */}
+      <div className="relative z-10 flex items-start justify-between gap-4 mb-4">
+        <div className="flex items-center gap-3 min-w-0">
+          {project.thumbnail ? (
+            <div className="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 border"
+              style={{ borderColor: isDark ? 'rgba(139,92,246,0.25)' : 'rgba(139,92,246,0.2)' }}>
+              <Media resource={project.thumbnail} className="w-full h-full object-cover" />
+            </div>
+          ) : (
+            <div
+              className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+              style={{
+                backgroundColor: isDark ? 'rgba(124,58,237,0.15)' : 'rgba(124,58,237,0.1)',
+                border: `1px solid ${isDark ? 'rgba(139,92,246,0.3)' : 'rgba(139,92,246,0.25)'}`,
+              }}
             >
-              {project.category?.replace(/-/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()) || 'Project'}
-            </span>
-            {project.featured && (
-              <span className="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-amber-400/90 text-amber-950">
-                Featured
-              </span>
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke={isDark ? '#a78bfa' : '#7c3aed'}
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.75}
+                  d="M12 21a9 9 0 100-18 9 9 0 000 18zM3.6 9h16.8M3.6 15h16.8M12 3a15.3 15.3 0 010 18M12 3a15.3 15.3 0 000 18"
+                />
+              </svg>
+            </div>
+          )}
+
+          <div className="min-w-0">
+            <h3
+              className="text-[15px] font-semibold tracking-tight leading-snug truncate"
+              style={{ color: isDark ? '#f1ecff' : '#241b3a' }}
+            >
+              {project.title}
+            </h3>
+            {displayUrl && (
+              <a
+                href={project.links?.liveUrl || undefined}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[13px] truncate block hover:underline"
+                style={{
+                  color: isDark ? '#a78bfa' : '#7c3aed',
+                  fontFamily: "'JetBrains Mono', monospace",
+                }}
+              >
+                {displayUrl}
+              </a>
             )}
           </div>
-        )}
+        </div>
 
-        <h3
-          className="text-[15px] font-semibold tracking-tight leading-snug"
-          style={{ color: isDark ? '#e8e0ff' : '#2a2140' }}
-        >
-          {project.title}
-        </h3>
+        <div className="flex items-center gap-2 flex-shrink-0">
+          <span
+            className="text-[10px] font-semibold tracking-wide uppercase px-3 py-1.5 rounded-lg whitespace-nowrap"
+            style={{
+              color: isDark ? '#a78bfa' : '#7c3aed',
+              backgroundColor: isDark ? 'rgba(124,58,237,0.12)' : 'rgba(124,58,237,0.08)',
+              border: `1px solid ${isDark ? 'rgba(139,92,246,0.3)' : 'rgba(139,92,246,0.25)'}`,
+            }}
+          >
+            {formatCategory(project.category) || 'Project'}
+          </span>
 
+          {primaryUrl && (
+            <a
+              href={primaryUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-7 h-7 flex items-center justify-center rounded-lg transition-colors duration-200"
+              style={{
+                color: isDark ? 'rgba(232,224,255,0.5)' : '#8a7bb0',
+              }}
+              aria-label="Open project"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M7 17L17 7M17 7H8M17 7v9"
+                />
+              </svg>
+            </a>
+          )}
+        </div>
+      </div>
+
+      {/* Description */}
+      {project.description && (
         <p
-          className="text-[13px] leading-relaxed line-clamp-2 flex-1"
-          style={{ color: isDark ? 'rgba(232,224,255,0.5)' : '#8a7bb0' }}
+          className="relative z-10 text-[13px] leading-relaxed mb-5"
+          style={{ color: isDark ? 'rgba(232,224,255,0.55)' : '#8a7bb0' }}
         >
           {project.description}
         </p>
+      )}
 
-        {project.technologies && project.technologies.length > 0 && (
-          <div className="flex flex-wrap gap-1.5">
-            {project.technologies.map((tech, i) => (
-              <span
-                key={i}
-                className={`text-[10px] px-2 py-0.5 rounded-md ${getTechColor(tech.color || 'blue')}`}
-              >
-                {tech.name}
-              </span>
-            ))}
-          </div>
-        )}
+      {/* Divider */}
+      <div
+        className="relative z-10 mb-4"
+        style={{
+          borderTop: `1px solid ${isDark ? 'rgba(139,92,246,0.12)' : 'rgba(139,92,246,0.12)'}`,
+        }}
+      />
 
-        {(project.links?.liveUrl || project.links?.githubUrl) && (
-          <div className="flex items-center gap-4 pt-1">
-            {project.links?.liveUrl && (
-              <a
-                href={project.links.liveUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs font-medium inline-flex items-center gap-1.5 transition-all duration-300 hover:gap-2"
-                style={{ color: isDark ? '#a78bfa' : '#7c3aed' }}
-              >
-                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                </svg>
-                Live Demo
-              </a>
-            )}
-            {project.links?.githubUrl && (
-              <a
-                href={project.links.githubUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs font-medium inline-flex items-center gap-1.5 transition-all duration-300 hover:gap-2"
-                style={{ color: isDark ? 'rgba(232,224,255,0.55)' : '#4b3f73' }}
-              >
-                <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z" />
-                </svg>
-                Source
-              </a>
-            )}
-          </div>
-        )}
-      </div>
+      {/* Tech tags */}
+      {project.technologies && project.technologies.length > 0 && (
+        <div className="relative z-10 flex flex-wrap gap-2 mt-auto">
+          {project.technologies.map((tech, i) => (
+            <span
+              key={i}
+              className={`text-[11px] px-2.5 py-1 rounded-md border border-current/20 ${getTechColor(tech.color || 'blue')}`}
+              style={{ fontFamily: "'JetBrains Mono', monospace" }}
+            >
+              {tech.name}
+            </span>
+          ))}
+        </div>
+      )}
     </motion.div>
   )
 }
@@ -196,7 +228,7 @@ const ProjectsBlockComponent: React.FC<Props> = ({
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start end', 'end start'] })
   const sectionY = useTransform(scrollYProgress, [0, 1], ['6%', '-6%'])
 
-  const [activeFilter, setActiveFilter] = useState('all')
+  const [activeFilter, setActiveFilter] = React.useState('all')
 
   const categories = useMemo(() => {
     if (!projects) return ['all']
@@ -352,7 +384,7 @@ const ProjectsBlockComponent: React.FC<Props> = ({
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.96 }}
               >
-                {category === 'all' ? 'All' : category.replace(/-/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}
+                {category === 'all' ? 'All' : formatCategory(category)}
               </motion.button>
             ))}
           </motion.div>

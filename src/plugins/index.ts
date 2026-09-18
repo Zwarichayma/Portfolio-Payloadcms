@@ -24,6 +24,11 @@ const generateURL: GenerateURL<Post | Page> = ({ doc }) => {
   return doc?.slug ? `${url}/${doc.slug}` : url
 }
 
+// Diagnostic: shows in Vercel logs whether the Blob token is available at runtime.
+if (process.env.VERCEL) {
+  console.log('[storage] Vercel Blob enabled:', Boolean(process.env.BLOB_READ_WRITE_TOKEN))
+}
+
 export const plugins: Plugin[] = [
   // Store uploads on Vercel Blob in production (local disk is ephemeral on Vercel).
   // Disabled automatically when BLOB_READ_WRITE_TOKEN is not set (e.g. local dev).
