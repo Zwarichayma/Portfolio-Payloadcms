@@ -36,6 +36,16 @@ export const HeaderBlock: Block = {
       },
     },
     {
+      name: 'useInternalLogo',
+      type: 'checkbox',
+      label: 'Utiliser le logo interne (chayma.dev)',
+      defaultValue: false,
+      admin: {
+        description:
+          'Coché : affiche le logo interne intégré (public/chayma-dev-logo.png), sans aucun upload.',
+      },
+    },
+    {
       name: 'overrideLogo',
       type: 'checkbox',
       label: 'Redéfinir le logo',

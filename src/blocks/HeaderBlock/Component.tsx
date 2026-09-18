@@ -19,6 +19,7 @@ export type HeaderBlockProps = HeaderBlockFromPayload
 export const HeaderBlock: React.FC<HeaderBlockProps> = async (props) => {
   const {
     showLogo,
+    useInternalLogo,
     overrideLogo,
     overrideMenus,
     overrideCtaButton,
@@ -32,10 +33,11 @@ export const HeaderBlock: React.FC<HeaderBlockProps> = async (props) => {
   const logoToUse = overrideLogo ? logo : globalHeader?.logo
   const hasLogo =
     showLogo !== false &&
-    typeof logoToUse === 'object' &&
-    logoToUse !== null &&
-    'url' in logoToUse &&
-    Boolean(logoToUse.url)
+    (useInternalLogo ||
+      (typeof logoToUse === 'object' &&
+        logoToUse !== null &&
+        'url' in logoToUse &&
+        Boolean(logoToUse.url)))
   const logoLinkToUse = overrideLogo ? logoLink : globalHeader?.logoLink
   const menusToUse = overrideMenus ? customMenus : globalHeader?.menus || []
   const ctaButtonToUse = overrideCtaButton ? ctaButton : globalHeader?.ctaButton
@@ -53,13 +55,9 @@ export const HeaderBlock: React.FC<HeaderBlockProps> = async (props) => {
     <>
       <section>
         <HeaderWrapper>
-          <header className="container relative lg:[--has-sidebar:1] lg:w-full lg:px-24 md:px-40 py-16 flex items-center justify-between h-full">
-            {/* Logo et Navigation */}
-            <div
-              className={`flex items-center min-w-0 ${
-                hasLogo ? 'gap-32' : 'flex-1 justify-center'
-              }`}
-            >
+          <header className="container lg:[--has-sidebar:1] lg:w-full lg:px-24 md:px-40 py-16 flex items-center justify-between h-full lg:grid lg:grid-cols-[1fr_auto_1fr]">
+            {/* Logo */}
+            <div className="flex items-center min-w-0">
               {/* Logo - Server Component */}
               {hasLogo && (
                 <div className="flex-shrink-0">
@@ -85,10 +83,18 @@ export const HeaderBlock: React.FC<HeaderBlockProps> = async (props) => {
                         : false
                     }
                   >
-                    {typeof logoToUse === 'object' &&
-                    logoToUse &&
-                    'url' in logoToUse &&
-                    logoToUse.url ? (
+                    {useInternalLogo ? (
+                      <Image
+                        src="/chayma-dev-logo.png"
+                        alt="Site Logo"
+                        width={155}
+                        height={40}
+                        className="w-[125px] md:w-[155px] max-h-[40px] object-contain"
+                      />
+                    ) : typeof logoToUse === 'object' &&
+                      logoToUse &&
+                      'url' in logoToUse &&
+                      logoToUse.url ? (
                       <Image
                         src={logoToUse.url}
                         alt="Site Logo"
@@ -101,20 +107,17 @@ export const HeaderBlock: React.FC<HeaderBlockProps> = async (props) => {
                 </div>
               )}
 
-              {/* Navigation Desktop - Server Component */}
-              {hasValidMenus && (
-                <nav className={`hidden lg:flex items-center ${hasLogo ? 'gap-32' : 'gap-8'}`}>
-                  <DesktopNav menus={menusToUse} />
-                </nav>
-              )}
             </div>
 
+            {/* Navigation Desktop - toujours centré */}
+            {hasValidMenus && (
+              <nav className="hidden lg:flex items-center justify-center gap-8">
+                <DesktopNav menus={menusToUse} />
+              </nav>
+            )}
+
             {/* Actions Desktop & Mobile */}
-            <div
-              className={`flex items-center gap-4 ml-auto lg:ml-0 ${
-                hasLogo ? '' : 'lg:absolute lg:right-0'
-              }`}
-            >
+            <div className="flex items-center gap-4 ml-auto lg:ml-0 lg:justify-end lg:col-start-3">
               {/* CTA Button Desktop - Server Component */}
               {hasValidCtaButton && (
                 <div className="hidden lg:block">

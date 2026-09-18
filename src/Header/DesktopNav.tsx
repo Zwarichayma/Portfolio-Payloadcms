@@ -17,6 +17,7 @@ interface DesktopNavProps {
 
 export const DesktopNav: React.FC<DesktopNavProps> = ({ menus }) => {
   const [openMenu, setOpenMenu] = useState<string | null>(null)
+  const [activeKey, setActiveKey] = useState<string | null>(null)
   const pathname = usePathname()
 
   if (!menus || menus.length === 0) return null
@@ -46,6 +47,8 @@ export const DesktopNav: React.FC<DesktopNavProps> = ({ menus }) => {
             setOpenMenu={setOpenMenu}
             menuIndex={index}
             pathname={pathname}
+            activeKey={activeKey}
+            setActiveKey={setActiveKey}
           />
         )
       })}
@@ -64,6 +67,8 @@ const DesktopMenuItem: React.FC<{
   setOpenMenu: (menu: string | null) => void
   menuIndex: number
   pathname: string | null
+  activeKey: string | null
+  setActiveKey: (key: string | null) => void
 }> = ({
   title,
   linkType = 'none',
@@ -75,6 +80,8 @@ const DesktopMenuItem: React.FC<{
   setOpenMenu,
   menuIndex,
   pathname,
+  activeKey,
+  setActiveKey,
 }) => {
   const menuItemRef = useRef<HTMLDivElement>(null)
   const uniqueMenuKey = `menu-${menuIndex}`
@@ -84,7 +91,6 @@ const DesktopMenuItem: React.FC<{
 
   const dropdownBg = isDark ? '#111827' : '#ffffff'
   const itemHoverBg = isDark ? '#374151' : '#f9fafb'
-  const triggerActiveBg = isDark ? '#374151' : '#f3f4f6'
   const footerBg = isDark ? '#1f2937' : '#f3f4f6'
   const footerBorder = isDark ? '#374151' : '#e5e7eb'
   const itemTextColor = isDark ? '#e5e7eb' : '#191d1e'
@@ -155,10 +161,12 @@ const DesktopMenuItem: React.FC<{
     }),
   )
 
-  // Item actif : lien direct correspondant, ou l'un des items du dropdown
-  const isActive = menuLinkUrl
-    ? menuLinkUrl === pathname
-    : dropdownItems.some((item) => item.href && item.href === pathname)
+  // Item actif : cliqué, ou lien direct/dropdown correspondant à la page courante
+  const isActive =
+    activeKey === uniqueMenuKey ||
+    (menuLinkUrl
+      ? menuLinkUrl === pathname
+      : dropdownItems.some((item) => item.href && item.href === pathname))
 
   // Calcul dynamique des colonnes : 3 items maximum par colonne
   const columnsCount = Math.ceil(dropdownItems.length / 3)
@@ -192,10 +200,8 @@ const DesktopMenuItem: React.FC<{
         reference={reference}
         linkType={(linkType as 'none' | 'reference' | 'custom') || 'none'}
         newTab={false}
-        className={cn(
-          'group flex flex-row items-center px-24 py-16 gap-7 cursor-pointer h-[2.375rem] relative rounded-lg transition-all duration-200',
-          '',
-        )}
+        onClick={() => setActiveKey(uniqueMenuKey)}
+        className="group flex flex-row items-center px-24 py-16 gap-7 cursor-pointer h-[2.375rem] relative rounded-lg transition-all duration-200"
       >
         <span className="relative inline-block">
           <CustomText
@@ -223,19 +229,11 @@ const DesktopMenuItem: React.FC<{
   return (
     <div
       ref={menuItemRef}
-      className={cn(
-        'group flex flex-row items-center px-24 py-16 gap-7 cursor-pointer h-[2.375rem] relative rounded-lg transition-all duration-200',
-        '',
-        isOpen && items && items.length > 0 ? 'bg-gray-100 dark:bg-gray-700' : '',
-      )}
-      style={isOpen ? { backgroundColor: triggerActiveBg } : undefined}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.backgroundColor = triggerActiveBg
+      className="group flex flex-row items-center px-24 py-16 gap-7 cursor-pointer h-[2.375rem] relative rounded-lg transition-all duration-200"
+      onClick={() => {
+        setActiveKey(uniqueMenuKey)
+        handleMenuClick()
       }}
-      onMouseLeave={(e) => {
-        if (!isOpen) e.currentTarget.style.backgroundColor = 'transparent'
-      }}
-      onClick={handleMenuClick}
     >
       <span className="relative inline-block">
         <CustomText

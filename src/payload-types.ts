@@ -863,6 +863,10 @@ export interface HeaderBlockProps {
    */
   showLogo?: boolean | null;
   /**
+   * Coché : affiche le logo interne intégré (public/chayma-dev-logo.png), sans aucun upload.
+   */
+  useInternalLogo?: boolean | null;
+  /**
    * Coché : Utilise un logo spécifique pour cette page. ☐ Décoché : Utilise le logo du header global par défaut.
    */
   overrideLogo?: boolean | null;
@@ -1787,6 +1791,7 @@ export interface DeveloperPortfolioBlockSelect<T extends boolean = true> {
 export interface HeaderBlockPropsSelect<T extends boolean = true> {
   anchorId?: T;
   showLogo?: T;
+  useInternalLogo?: T;
   overrideLogo?: T;
   logo?: T;
   logoLink?:
