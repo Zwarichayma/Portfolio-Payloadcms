@@ -62,7 +62,6 @@ const DeveloperPortfolioBlockComponent: React.FC<Props> = ({
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end start'] })
 
   const bgY = useTransform(scrollYProgress, [0, 1], ['0%', '30%'])
-  const contentY = useTransform(scrollYProgress, [0, 1], ['0%', '15%'])
   const imageScale = useTransform(scrollYProgress, [0, 1], [1, 0.95])
   const imageOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0.6])
 
@@ -153,7 +152,6 @@ const DeveloperPortfolioBlockComponent: React.FC<Props> = ({
 
       <motion.div
         className="relative z-10 w-full max-w-6xl mx-auto px-6"
-        style={{ y: contentY }}
       >
         <motion.div
           className="w-full max-w-5xl"
