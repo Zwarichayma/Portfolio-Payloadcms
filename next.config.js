@@ -15,12 +15,20 @@ const SERVER_URL =
   process.env.__NEXT_PRIVATE_ORIGIN ||
   'http://localhost:3000'
 
+const isVercel = Boolean(process.env.VERCEL)
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Enables a minimal server output for containerized deployments (see Dockerfile).
-  output: 'standalone',
+  // 'standalone' output is only needed for containerized (Docker) deployments.
+  // Vercel builds normally and would ignore/mis-handle it.
+  ...(isVercel ? {} : { output: 'standalone' }),
   // Avoid ambiguous workspace root detection when a lockfile exists in a parent folder.
   outputFileTracingRoot: __dirname,
+  // Bundle the local media folder into the serverless functions so the local
+  // `/api/media/file/...` route keeps working on Vercel for media not yet on Blob.
+  outputFileTracingIncludes: {
+    '/api/[...slug]': ['./media/**/*'],
+  },
   poweredByHeader: false,
   images: {
     remotePatterns: [
