@@ -230,16 +230,18 @@ const ProjectsBlockComponent: React.FC<Props> = ({
 
   const [activeFilter, setActiveFilter] = React.useState('all')
 
+  const getCategoryKey = (category?: string | null) => category || 'other'
+
   const categories = useMemo(() => {
     if (!projects) return ['all']
-    const cats = new Set(projects.map((p) => p.category || 'other'))
+    const cats = new Set(projects.map((p) => getCategoryKey(p.category)))
     return ['all', ...Array.from(cats)]
   }, [projects])
 
   const filteredProjects = useMemo(() => {
     if (!projects) return []
     if (activeFilter === 'all') return projects
-    return projects.filter((p) => p.category === activeFilter)
+    return projects.filter((p) => getCategoryKey(p.category) === activeFilter)
   }, [projects, activeFilter])
 
   const getGridCols = () => {

@@ -152,7 +152,7 @@ const DeveloperPortfolioBlockComponent: React.FC<Props> = ({
       />
 
       <motion.div
-        className="relative z-10 w-full max-w-6xl mx-auto px-6 flex items-center justify-center min-h-screen"
+        className="relative z-10 w-full max-w-6xl mx-auto px-6 flex items-center justify-center min-h-screen pt-40 pb-24 lg:pt-28 lg:pb-16"
         style={{ y: contentY }}
       >
         <motion.div
@@ -162,7 +162,7 @@ const DeveloperPortfolioBlockComponent: React.FC<Props> = ({
           animate="visible"
         >
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-            <div className="text-center lg:text-left order-2 lg:order-1">
+            <div className="text-center lg:text-left order-1">
               {statusBadge && (
                 <motion.div
                   className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs mb-8"
@@ -232,7 +232,7 @@ const DeveloperPortfolioBlockComponent: React.FC<Props> = ({
               )}
             </div>
 
-            <div className="order-1 lg:order-2 flex flex-col gap-4">
+            <div className="order-2 flex flex-col gap-4">
               {/* Code card */}
               <motion.div
                 className="w-full rounded-2xl overflow-hidden will-change-transform"
