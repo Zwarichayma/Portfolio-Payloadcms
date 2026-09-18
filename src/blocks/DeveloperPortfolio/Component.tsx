@@ -123,7 +123,7 @@ const DeveloperPortfolioBlockComponent: React.FC<Props> = ({
   return (
     <div
       ref={sectionRef}
-      className="relative min-h-screen overflow-hidden will-change-transform"
+      className="relative min-h-screen overflow-hidden will-change-transform flex items-center justify-center pt-40 pb-24 lg:pt-28 lg:pb-16"
       style={{ backgroundColor: isDark ? '#0c0a14' : '#fbfaff' }}
     >
       {showParticles && <ParticleBackground />}
@@ -152,7 +152,7 @@ const DeveloperPortfolioBlockComponent: React.FC<Props> = ({
       />
 
       <motion.div
-        className="relative z-10 w-full max-w-6xl mx-auto px-6 flex items-center justify-center min-h-screen pt-40 pb-24 lg:pt-28 lg:pb-16"
+        className="relative z-10 w-full max-w-6xl mx-auto px-6"
         style={{ y: contentY }}
       >
         <motion.div
